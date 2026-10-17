@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+\centering\small
+\renewcommand{\arraystretch}{1.18}
+\caption{Comparaison des quatre régularisations sur 2023 ; ligne retenue en gras.}\label{tab:ml-selection}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrr@{}}
+\toprule
+C & Log-loss & Brier & AP & ROC-AUC \\
+\midrule
+0,01 & 0,401516 & 0,127054 & 0,408526 & 0,768392 \\
+0,1 & 0,400823 & 0,127067 & 0,408773 & 0,769805 \\
+\textbf{1} & \textbf{0,400797} & \textbf{0,127102} & \textbf{0,408514} & \textbf{0,769915} \\
+10 & 0,400805 & 0,127110 & 0,408432 & 0,769911 \\
+\bottomrule
+\end{tabular*}
+\sourcecalcul{notebook 06 ; même représentation et même apprentissage pour les quatre valeurs de C}
+\end{table}

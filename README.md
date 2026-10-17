@@ -7,6 +7,8 @@ L'objectif est de comprendre les différences de gravité entre les usagers,
 de quantifier certains écarts et d'évaluer ce qu'une régression logistique
 permet d'estimer sur une année ultérieure.
 
+[Consulter le rapport complet](reports/BAAC_rapport.pdf) · [Sources LaTeX](reports/latex/)
+
 ## Question étudiée
 
 **Quelles caractéristiques sont associées au décès ou à l'hospitalisation des
@@ -70,6 +72,8 @@ et peut être lancé depuis un noyau neuf.
 | `scripts/rename_files.py` | Harmonisation des noms des fichiers téléchargés, si nécessaire |
 | `reports/figures/` | Graphiques exportés par les notebooks 04 à 07 |
 | `reports/tables/` | Tableaux, scores, configurations et métadonnées |
+| `reports/BAAC_rapport.pdf` | Rapport final de l'étude |
+| `reports/latex/` | Sources LaTeX du rapport, figures, tableaux et guide de compilation |
 | `docs/BAAC_cahier_des_charges.md` | Objectifs, périmètre et décisions méthodologiques |
 | `docs/references/` | Documentation des données BAAC |
 | `requirements.txt` | Bibliothèques directement utilisées et versions retenues |
@@ -201,10 +205,32 @@ entre catégories d'usagers et le rôle des informations manquantes.
   Les performances varient selon les groupes et les probabilités restent
   imparfaitement calibrées.
 
+## Rapport
+
+Le [rapport final](reports/BAAC_rapport.pdf) compte **49 pages** et présente
+le travail en deux grandes parties :
+
+1. Compréhension des sources, audit, préparation, exploration et analyse statistique.
+2. Modélisation probabiliste, validation sur 2023 et évaluation sur 2024.
+
+Il comprend également une introduction, une conclusion générale, un glossaire,
+les références et les annexes de reproduction. Les **18 graphiques** des notebooks
+04 à 07 y sont intégrés et commentés.
+
+Les [sources LaTeX](reports/latex/) permettent de modifier le texte, les tableaux
+et la mise en page. Le document principal est `reports/latex/main.tex`.
+Le [README des sources](reports/latex/README.md) explique la compilation locale
+et l'utilisation dans Overleaf.
+
 ## État du projet
 
-Les sept notebooks, le module partagé et les résultats de l'étude sont disponibles.
-La partie consacrée au machine learning et la conclusion générale du rapport
-LaTeX/PDF restent à intégrer au dépôt.
+L'étude est finalisée dans le périmètre retenu : sept notebooks, préparation
+contrôlée des données, analyses statistiques, comparaison à une référence
+constante et évaluation de la régression logistique. Le rapport est terminé,
+avec ses résultats, ses limites et ses sources modifiables.
 
-Auteur : **Papa Birane Mbengue**, élève ingénieur en informatique à Sup Galilée.
+## Auteur et contact
+
+**Papa Birane Mbengue**, élève ingénieur en informatique à Sup Galilée.
+
+Contact : [papabirane.mbengue@outlook.com](mailto:papabirane.mbengue@outlook.com).

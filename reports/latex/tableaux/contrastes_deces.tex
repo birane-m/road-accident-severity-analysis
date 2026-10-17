@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+\centering\small
+\renewcommand{\arraystretch}{1.18}
+\caption{Écarts et rapports : décès seuls, 2019-2022.}\label{tab:deces_seul}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrr@{}}
+\toprule
+Comparaison A / R & Écart (points) & IC à 95\% & Rapport & IC à 95\% \\
+\midrule
+75+ / 35-44 ans & 6,44 & [6,06 ; 6,84] & 4,27 & [4,00 ; 4,61] \\
+Piétons / conducteurs & 2,39 & [2,16 ; 2,63] & 1,98 & [1,88 ; 2,08] \\
+Nuit sans éclairage / jour & 4,12 & [3,87 ; 4,37] & 2,87 & [2,74 ; 3,01] \\
+Hors / en agglomération & 3,27 & [3,15 ; 3,38] & 3,44 & [3,30 ; 3,58] \\
+\bottomrule
+\end{tabular*}
+\sourcecalcul{notebook 05 ; intervalles percentiles marginaux, 2 000 réplications d'accidents stratifiées par année}
+\end{table}

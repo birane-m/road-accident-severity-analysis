@@ -1,0 +1,199 @@
+\chapter[Analyse statistique et probabiliste des écarts de gravité]{Analyse statistique et probabiliste\\des écarts de gravité}
+\label{chap:statistiques}
+
+Le notebook 05 prolonge l'exploration par des écarts absolus, des rapports de proportions
+et des intervalles bootstrap. La question n'est pas seulement de savoir si deux
+pourcentages diffèrent~: il faut préciser la quantité estimée, son dénominateur et le
+processus de répétition auquel son intervalle se rapporte.
+
+\section{Probabilités conditionnelles et variable de Bernoulli}
+Pour un usager à gravité connue, $Y$ vaut 1 en cas de décès ou d'hospitalisation et 0
+sinon. Pour un usager tiré au hasard dans la population définie, $Y$ est une variable
+de Bernoulli de paramètre $p$, avec $E(Y)=p$ et $\operatorname{Var}(Y)=p(1-p)$.
+Cette description marginale n'impose pas que les usagers d'un même accident soient
+indépendants.
+
+Notons $S$ le périmètre des usagers d'accidents corporels enregistrés en métropole en
+2019-2022, avec gravité connue. Pour un groupe $G$, la quantité étudiée est
+\begin{equation}
+ p_G=P(Y=1\mid G,S),\qquad
+ \widehat p_G=\frac{n_{G,1}}{n_{G,0}+n_{G,1}},
+ \label{eq:proportion}
+\end{equation}
+où $n_{G,1}$ et $n_{G,0}$ sont les effectifs positifs et négatifs connus du groupe.
+L'estimateur est pondéré par les usagers, pas par un poids égal attribué à chaque accident.
+
+\section{Contrastes retenus et mesure de leur ampleur}
+Quatre comparaisons sont fixées à partir de l'exploration~: 75 ans ou plus contre
+35-44 ans, piétons contre conducteurs, nuit sans éclairage public contre plein jour,
+et hors agglomération contre en agglomération. L'orientation A / R reste identique
+dans les tableaux, les graphiques et les réplications.
+
+Deux mesures sont complémentaires~:
+\begin{equation}
+ \Delta=100(p_A-p_R)\quad\text{en points de pourcentage},\qquad
+ R_p=\frac{p_A}{p_R}\quad\text{sans unité}.
+ \label{eq:contrastes}
+\end{equation}
+Un écart entre 32,6\,\% et 16,6\,\% représente environ 16 points de pourcentage et un
+rapport de 1,97. Ce rapport est un rapport de proportions conditionnelles, pas un
+rapport de risques d'accident par trajet, ni un rapport de cotes (\textit{odds ratio}).
+Si la proportion de référence est nulle, le rapport reste indéfini.
+
+Dans chaque contraste, A et R sont disjoints. En revanche, les groupes de dimensions
+différentes se recoupent~: un piéton peut aussi avoir plus de 75 ans et être impliqué
+hors agglomération. Les comptages des neuf groupes, ensemble inclus, ne doivent donc
+pas être additionnés pour reconstruire la population.
+
+\section{Quel sens donner à un intervalle ici~?}
+Les proportions sont des descriptions exactes des enregistrements disponibles. BAAC
+n'est pas un échantillon aléatoire simple de tous les déplacements. Les intervalles
+ne sont donc pas une marge d'erreur garantie sur l'ensemble des accidents réels.
+
+Le cadre retenu est une répétition hypothétique~: si des accidents comparables étaient
+enregistrés à nouveau dans les mêmes années et avec des pratiques de collecte
+comparables, quelle variabilité nos statistiques pourraient-elles présenter~? Les
+accidents sont supposés approximativement indépendants au sein d'une année et leur
+distribution empirique représente le processus envisagé. Les années sont fixes et
+les personnes restent liées à l'intérieur de chaque accident.
+
+Ce cadre ne modélise pas une dépendance spatiale ou temporelle supplémentaire entre
+accidents. Il ne corrige ni la sous-déclaration, ni les erreurs de renseignement, ni
+les gravités inconnues. La prudence d'interprétation reste nécessaire même avec un
+grand effectif et un intervalle étroit.
+
+\section{Bootstrap par accident, stratifié par année}
+Le rééchantillonnage de groupes entiers et la sélection séparée dans les strates sont
+des mécanismes décrits par le manuel \textit{bsample}~\cite{stata-bsample}. Notre choix
+de l'accident comme groupe et de l'année comme strate répond à l'organisation de BAAC.
+La référence décrit le mécanisme, sans valider à elle seule toutes ses hypothèses ici.
+
+Un exemple fictif rend la règle concrète. Trois accidents A, B et C comportent
+respectivement 2, 1 et 3 usagers, dont 1, 0 et 2 cas positifs. La proportion observée
+est $3/6=50\,\%$. Un tirage A, A, C conserve les deux copies de A~: il comprend sept
+usagers et quatre positifs, soit $4/7$. Le nombre de tirages d'accidents est inchangé,
+mais le nombre d'usagers varie. Éliminer les tirages répétés ou conserver seulement
+un usager par accident changerait la méthode.
+
+Pour chaque réplication réelle, autant d'accidents que ceux observés en 2019 sont
+tirés avec remise, puis l'opération est répétée séparément pour 2020, 2021 et 2022.
+Les contributions sont regroupées pour calculer les proportions de la période.
+Les 207\,057 accidents sont conservés dans la base de tirage, y compris ceux dont
+la contribution est nulle pour un groupe donné ou pour les gravités connues.
+
+L'implémentation utilise une matrice de comptages par accident~: pour chacun des neuf
+groupes, elle stocke les gravités connues, les cas positifs principaux et les décès.
+Les 27 colonnes suffisent aux statistiques calculées. La somme des comptages des
+accidents tirés est équivalente à la copie de leurs usagers, avec leurs répétitions.
+Cette équivalence a été vérifiée sur un exemple indépendant.
+
+Le nombre de réplications est $B=2\,000$ et la graine est 20261016. Chaque année utilise
+\code{numpy.default_rng} avec une initialisation fondée sur la graine et l'année.
+Les mêmes tirages servent à tous les groupes et aux deux définitions de gravité~:
+les liens entre personnes et entre statistiques sont ainsi conservés. Les intervalles
+des écarts sont calculés sur les écarts répliqués, sans soustraire les bornes de deux
+intervalles de proportions séparés.
+
+\subsection{Construction des bornes percentiles}
+Pour une statistique $T$, les réplications $T_1^*,\ldots,T_B^*$ donnent l'intervalle
+percentile nominal à 95\,\%~\cite{nist-bootstrap}~:
+\begin{equation}
+ \left[q_{0,025}(T^*),\ q_{0,975}(T^*)\right].
+ \label{eq:ic}
+\end{equation}
+Les quantiles utilisent une interpolation linéaire. Il s'agit d'une approximation
+simple non corrigée du biais. Le niveau de 95\,\% concerne la procédure dans un cadre
+de répétition~; il n'attribue pas une probabilité de 95\,\% à un paramètre fixé à
+l'intérieur de l'intervalle déjà calculé.
+
+Les intervalles sont marginaux, un par statistique, et ne garantissent pas une
+couverture simultanée de toutes les comparaisons. Si une réplication rend une
+statistique indéfinie, le programme signale le nombre de valeurs valides et laisse
+l'intervalle manquant, sans écarter silencieusement cette réplication. Tous les
+contrastes présentés disposent ici de 2\,000 valeurs valides.
+
+\section{Résultats pour décès ou hospitalisation}
+Le tableau~\ref{tab:deces_hospitalisation} et la figure~\ref{fig:forest-principal}
+présentent les résultats regroupés. Les quatre écarts sont positifs et leurs
+intervalles restent au-dessus de zéro dans le cadre de répétition retenu.
+\input{tableaux/contrastes_principaux}
+\figurerapport{05_01_contrastes_cible_principale.png}{Écarts en points et rapports de proportions pour la cible principale. Les références sont respectivement zéro et un.}{fig:forest-principal}
+
+Pour les piétons, la proportion atteint 32,60\,\%, contre 16,57\,\% pour les conducteurs.
+L'écart est de 16,03 points, avec un intervalle [15,52~; 16,54], et le rapport de 1,97,
+avec un intervalle [1,93~; 2,00]. Pour l'âge, l'écart est plus grand, à 19,35 points,
+mais il concerne deux tranches choisies après l'exploration. Les rapports de 1,70 pour
+la lumière et 2,01 pour l'agglomération résument des différences brutes.
+
+Ces résultats ne désignent pas quatre effets indépendants. Une partie de leurs écarts
+peut refléter des compositions communes en âge, véhicule ou contexte. Le fait qu'un
+intervalle exclue zéro ne transforme pas l'association en effet causal et ne résout
+pas le caractère exploratoire de la sélection des comparaisons.
+\FloatBarrier
+
+\subsection{Distribution des réplications et stabilité numérique}
+La figure~\ref{fig:hist-bootstrap} représente les 2\,000 écarts piétons-conducteurs.
+Elle décrit une distribution de statistiques répliquées, et non une distribution de
+blessures ou une population de 2\,000 usagers. Les traits encadrent les bornes percentiles.
+\figurerapport[0.90]{05_02_distribution_bootstrap_pietons.png}{Distribution bootstrap de l'écart piétons-conducteurs. Chaque valeur résulte d'un nouveau tirage d'accidents dans les quatre années.}{fig:hist-bootstrap}
+
+Les bornes calculées avec les 1\,000 premières réplications sont comparées à celles
+des 2\,000 réplications, pour les écarts en points. La variation maximale est de
+0,0350 point, soit environ 0,04 point de pourcentage. Ce contrôle indique une faible
+sensibilité numérique sur cette exécution~; il ne prouve ni la couverture réelle
+des intervalles ni la validité des hypothèses.
+\input{tableaux/stabilite_bootstrap}
+\FloatBarrier
+
+\clearpage
+\section{Lecture annuelle et sensibilité aux décès seuls}
+\subsection{Les différences gardent-elles le même sens chaque année~?}
+Les comparaisons sont recalculées pour chaque année à partir des proportions et des
+réplications propres à cette année. Les années elles-mêmes ne sont pas rééchantillonnées.
+Les quatre écarts observés restent positifs en 2019, 2020, 2021 et 2022. L'écart d'âge
+est cependant plus faible en 2021-2022 qu'en 2019-2020.
+\figurerapport{05_03_contrastes_annuels.png}{Écarts annuels pour la cible principale. Les zones représentent des intervalles marginaux par année, sans couverture simultanée ni prévision d'une année future.}{fig:contrastes-annuels}
+
+La répétition du sens des écarts renforce leur constat descriptif sur la période.
+Elle ne sépare pas les contributions des autres variables et ne démontre pas un effet
+du temps. Les bandes ne sont pas des intervalles de prévision pour 2023 ou 2024.
+\FloatBarrier
+
+\subsection{Changer l'événement : décès seuls}
+La cible complémentaire vaut 1 pour les décès et 0 pour les trois autres modalités
+connues. Les gravités inconnues restent exclues du dénominateur. Les mêmes 467\,079
+usagers à gravité connue et les mêmes tirages sont donc utilisés. On compte
+11\,996 décès, soit 2,57\,\%.
+\input{tableaux/contrastes_deces}
+\figurerapport{05_04_contrastes_deces_seuls.png}{Écarts et rapports pour les décès seuls. Une différence absolue plus faible peut coexister avec un rapport plus élevé.}{fig:forest-deces}
+\FloatBarrier
+
+Chez les 75 ans ou plus, la proportion de décès est de 8,41\,\%, contre 1,97\,\% chez
+les 35-44 ans~: l'écart vaut 6,44 points et le rapport 4,27. Le rapport principal
+était de 2,39. Les rapports pour la lumière et l'agglomération sont aussi plus élevés
+avec les décès seuls, alors que celui des piétons reste proche de deux.
+
+La définition de l'événement change donc la lecture quantitative. Cette analyse
+permet d'examiner la sensibilité à l'hospitalisation~; elle ne justifie pas de choisir
+une cible parce qu'elle produit un contraste plus spectaculaire.
+\FloatBarrier
+
+\clearpage
+\section{Bilan de la première partie et limites}
+La première partie a produit une table métropolitaine traçable, des contrôles de
+jointure, un portrait des usagers et des comparaisons dont les dénominateurs sont
+explicites. Les écarts observés selon l'âge, la catégorie d'usager, la lumière et
+l'agglomération persistent dans la lecture annuelle de 2019-2022. Leur amplitude
+dépend de la définition de la gravité.
+
+Trois limites restent structurantes. Les accidents enregistrés ne représentent pas
+tous les trajets ni nécessairement tous les accidents réels. L'hospitalisation et
+les informations inconnues sont sensibles à la collecte. Enfin, les comparaisons
+sont brutes et certaines caractéristiques se recoupent. Le bootstrap ne supprime
+aucune de ces limites et n'intègre pas toutes les dépendances possibles entre accidents.
+
+La seconde partie étudie plusieurs caractéristiques simultanément et évalue des
+probabilités sur une année ultérieure, avec une référence constante et un protocole
+temporel déclaré. La gravité et ses dérivés sont exclus des prédicteurs, les traitements
+appris restent limités à l'apprentissage et les mécanismes de valeurs manquantes
+font l'objet de diagnostics spécifiques.

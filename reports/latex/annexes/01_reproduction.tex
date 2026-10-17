@@ -1,0 +1,93 @@
+\chapter{Fichiers produits et reproduction}
+\label{ann:reproduction}
+
+\section{Organisation des entrées et des notebooks}
+Les 24 CSV sources sont organisés dans \code{data/raw/2019} à \code{data/raw/2024}.
+Chaque dossier contient \code{caracteristiques.csv}, \code{lieux.csv},
+\code{vehicules.csv} et \code{usagers.csv}. Le README du projet décrit la récupération
+des sources. Les données volumineuses sont exclues du dépôt Git et des sources du rapport.
+
+\begin{table}[htbp]\centering\small\renewcommand{\arraystretch}{1.18}
+\caption{Dépendances entre les étapes du projet.}
+\begin{tabularx}{\textwidth}{@{}lLL@{}}\toprule
+Notebook & Entrées & Sorties principales\\\midrule
+01 & Quatre CSV de 2024 & Tableaux de découverte dans le notebook.\\
+02 & Les 24 CSV & Audit et règles de préparation.\\
+03 & Les 24 CSV & Tables préparées, schéma, manifeste et six bilans.\\
+04 & Table usagers et schéma du 03 & Dix tableaux, huit figures et métadonnées.\\
+05 & Table usagers et schéma du 03 & Sept tableaux de bilan, réplications, quatre figures et métadonnées.\\
+06 & Table usagers, schéma, bilan du 03 et module ML & Comparaison sur 2023, configuration, diagnostics et trois figures.\\
+07 & Entrées du 06 et configuration retenue & Vérification de reconstruction, test 2024, diagnostics et trois figures.\\\bottomrule
+\end{tabularx}
+\end{table}
+
+Chaque notebook recharge ses entrées depuis un espace de variables neuf. Les notebooks
+06 et 07 utilisent le module \code{src/baac_ml.py} ; l'encodeur reste appris dans la pipeline.
+
+\section{Installer et lancer l'étude}
+Avec Python 3.12 et GNU Make disponibles sous Linux ou macOS, depuis la racine du projet~:
+\begin{verbatim}
+make install
+.venv/bin/python -m jupyter lab
+\end{verbatim}
+Le fichier \code{requirements.txt} fixe les versions des bibliothèques directement
+utilisées. Leurs dépendances sont installées par \code{pip} selon les contraintes
+ déclarées. Le noyau Jupyter choisi doit utiliser ce venv. Les sept notebooks sont
+ ensuite exécutés dans l'ordre, chacun depuis un noyau neuf.
+
+La commande \code{make clean} supprime uniquement \code{.venv}, après \code{deactivate}
+si nécessaire. \code{make install} le recrée. Le Makefile n'exécute pas les analyses.
+
+\section{Lire les sorties et retrouver leur provenance}
+Dans \code{data/processed}, les tables principales sont
+\path{baac_usagers_metropole_2019_2024.csv.gz} et
+\path{baac_lieux_sources_metropole_2019_2024.csv.gz}. La compression gzip ne change
+pas leur unité d'observation. Le schéma \path{baac_regles_et_schema.json}, version
+ de règles 1.1, fournit les types et le marqueur \code{__BAAC_MANQUANT__}.
+Le manifeste \path{baac_sources_manifest.json} contient les empreintes des sources.
+Les six bilans documentent effectifs, géographie, identifiants, jointures, lieux et nettoyage.
+
+Les figures et tableaux sont classés par étape dans les sous-dossiers
+\code{04_exploration}, \code{05_statistics}, \code{06_modeling} et \code{07_evaluation},
+sous \code{reports/figures} et \code{reports/tables}. Une ligne du fichier
+\path{05_replicats_contrastes.csv.gz} représente un résultat de rééchantillonnage,
+et non un usager~: ses 16\,000 lignes correspondent à 2\,000 réplications, quatre
+contrastes et deux événements.
+
+Le notebook 07 lit \path{06_configuration_retenue.json}.
+La copie \path{07_configuration_evaluee.json} assure la traçabilité du test.
+Les JSON conservent les règles et empreintes ; les CSV donnent les populations,
+scores et diagnostics.
+
+\section{Contrôles de reproduction réalisés}
+La revue finale du 17 octobre 2026 a installé les dépendances du projet dans un venv
+neuf. La commande \code{pip check} n'a détecté aucun conflit. Les 105 cellules Python
+ des sept notebooks ont ensuite été exécutées, sans modification, dans sept processus
+neufs, en repartant des 24 CSV sans table préparée ni résultat préexistant.
+
+Les contrôles internes passent, les deux tables compressées reconstruites sont
+identiques octet par octet à celles fournies et les résultats statistiques sont
+reproduits. Les 18 figures sont régénérées. La logistique retient à nouveau $C=1$~;
+les écarts des scores de validation et de test restent inférieurs à $10^{-4}$.
+
+Les chiffres publiés proviennent des exports sous Python 3.12.3. La revue utilise
+Python 3.12.14 et les mêmes versions directes des bibliothèques. Son environnement est
+décrit dans \path{resultats/environnement_revue.json}. Les noyaux Jupyter sont bloqués
+par les restrictions de sockets : les cellules sont exécutées directement en Python,
+sans prétendre valider l'interface Jupyter sur la machine de l'auteur.
+
+\section{Modifier et compiler le rapport}
+Les sources du rapport contiennent les 18 figures scientifiques, le schéma relationnel
+ dessiné en LaTeX, les résultats agrégés nécessaires et un script qui génère 17 tableaux
+LaTeX. Le script utilise uniquement la bibliothèque standard Python. Il ne réexécute
+ni le nettoyage, ni le bootstrap, ni les modèles.
+
+Depuis le dossier contenant \code{main.tex}~:
+\begin{verbatim}
+python3 scripts/generer_tableaux.py
+pdflatex main.tex
+\end{verbatim}
+Répéter pdfLaTeX trois fois pour résoudre les renvois et le sommaire. Le README
+précise les prérequis et l'importation dans Overleaf. Les chapitres sont séparés
+pour faciliter les corrections.
+\FloatBarrier

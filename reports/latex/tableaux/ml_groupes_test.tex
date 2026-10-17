@@ -1,0 +1,15 @@
+\begin{table}[htbp]
+\centering\small
+\renewcommand{\arraystretch}{1.18}
+\caption{Diagnostics du test selon la catégorie d'usager.}\label{tab:ml-groupes}
+\begin{tabularx}{\textwidth}{@{}Lrrrrr@{}}
+\toprule
+Catégorie & Usagers & Cas positifs & Observé (\%) & Prédit (\%) & ROC-AUC \\
+\midrule
+Conducteur & 86\,838 & 14\,608 & 16,82 & 17,04 & 0,7921 \\
+Passager & 21\,526 & 3\,514 & 16,32 & 16,76 & 0,6970 \\
+Piéton & 8\,914 & 2\,902 & 32,56 & 32,81 & 0,6154 \\
+\bottomrule
+\end{tabularx}
+\sourcecalcul{notebook 07 ; les deux pourcentages sont une proportion observée et une probabilité moyenne}
+\end{table}

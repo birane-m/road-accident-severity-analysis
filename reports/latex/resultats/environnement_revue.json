@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-17",
+  "python": "3.12.14",
+  "pandas": "3.0.6",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "matplotlib": "3.11.2",
+  "scikit_learn": "1.9.1",
+  "method": "105 cellules Python inchangées, sept processus neufs, reconstruction depuis les 24 CSV ; noyaux Jupyter non démarrables dans cet environnement",
+  "donnees_preparees_identiques_octet_par_octet": true,
+  "resultats_statistiques_reproduits": true,
+  "ecarts_scores_ml_inferieurs_a": 0.0001,
+  "resultats_ml_publies": "exports fournis dans bacc.zip, environnement Python 3.12.3 ; les nombres du rapport ne sont pas remplacés par ceux de la revue"
+}

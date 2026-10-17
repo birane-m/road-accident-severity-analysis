@@ -1,0 +1,50 @@
+Ce projet étudie la gravité des blessures des usagers impliqués dans les accidents
+corporels de la route enregistrés en France métropolitaine, Corse comprise. Il poursuit
+deux objectifs complémentaires~: décrire les différences de gravité observées selon les
+caractéristiques des usagers et le contexte de l'accident, puis évaluer la capacité d'une
+régression logistique à estimer cette gravité sur une année ultérieure.
+
+L'étude s'appuie sur les données du Bulletin d'analyse des accidents corporels de la
+circulation, ou BAAC, pour les années 2019 à 2024. Les quatre fichiers annuels décrivent
+les caractéristiques générales de l'accident, les lieux, les véhicules et les usagers.
+L'unité d'analyse retenue est la participation d'un usager à un accident. La cible
+principale distingue les usagers décédés ou hospitalisés des usagers indemnes ou
+légèrement blessés~; les gravités inconnues restent identifiées séparément. Ce
+regroupement constitue une convention d'analyse, avec les limites propres à la collecte
+de l'hospitalisation. BAAC ne décrivant pas l'ensemble des déplacements, le projet
+n'estime pas un risque d'accident par trajet.
+
+La première partie porte sur la compréhension, la préparation et l'analyse des données.
+L'audit des six années met en évidence des différences de schéma, des codes particuliers,
+des informations manquantes et plusieurs enregistrements de lieux pour certains accidents.
+Chaque difficulté fait l'objet d'une règle justifiée et de contrôles associés. Les
+jointures préservent les usagers, les valeurs sources restent traçables et les désaccords
+entre lieux sont signalés. La table préparée comprend ainsi 702\,823 observations
+d'usagers, correspondant à 309\,756 accidents métropolitains.
+
+Les analyses exploratoires et statistiques se concentrent sur 2019-2022, la période
+d'apprentissage. Parmi les 467\,079 usagers dont la gravité est connue sur cette période,
+environ 17,8\,\% sont décédés ou hospitalisés. Les comparaisons font notamment apparaître
+des proportions plus élevées chez les piétons que chez les conducteurs, chez les personnes
+de 75 ans ou plus que chez les 35-44 ans, de nuit sans éclairage public qu'en plein jour,
+et hors agglomération qu'en agglomération. Les écarts et rapports de proportions sont
+accompagnés d'intervalles bootstrap obtenus en rééchantillonnant des accidents entiers,
+séparément dans chaque année. Une lecture annuelle et une analyse des décès seuls
+complètent ces résultats. Ces associations restent exploratoires et non causales.
+
+La seconde partie compare une référence constante à une régression logistique L2,
+avec onze variables et un encodage appris sur 2019-2022. La validation sur 2023 retient
+$C=1$ ; cette configuration est évaluée sur 2024 sans ajout de 2023 à l'apprentissage.
+Sur les 117\,278 usagers du test, la log-loss passe de 0,4703 à 0,4001, soit une réduction
+relative de 14,93\,\%. La ROC-AUC atteint 0,770. Le gain se maintient donc sur l'année
+suivante, mais le rappel au seuil illustratif de 0,5 reste limité à 18,22\,\%.
+
+Les probabilités élevées sont surestimées et le classement est moins performant chez
+les piétons. Le signal porté par les informations manquantes impose aussi une lecture
+prudente. Cette étude rétrospective met en évidence un apport prédictif mesurable,
+sans démontrer une utilité opérationnelle ni un effet causal. Les données, les règles,
+les résultats et leurs limites sont documentés dans les notebooks et le rapport.
+
+\vspace{3mm}
+{\sffamily\small\raggedright\textbf{Mots-clés~:} BAAC, accidents corporels, gravité des blessures,
+analyse de données, bootstrap, apprentissage automatique.\par}

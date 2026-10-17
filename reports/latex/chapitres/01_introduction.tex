@@ -1,0 +1,51 @@
+Un accident de la route peut avoir des conséquences très différentes pour les personnes
+impliquées. Certains usagers sont indemnes, tandis que
+d'autres sont blessés, hospitalisés ou décèdent. Comprendre ces différences conduit
+à examiner les caractéristiques des personnes, les véhicules et les circonstances
+de l'accident.
+
+Ce projet s'appuie sur les données du Bulletin d'analyse des accidents corporels de la
+circulation, ou BAAC, publiées sur
+data.gouv.fr\footnote{\href{https://www.data.gouv.fr/datasets/bases-de-donnees-annuelles-des-accidents-corporels-de-la-circulation-routiere-annees-de-2005-a-2024}{ONISR, bases de données annuelles des accidents corporels de la circulation, data.gouv.fr.}}.
+L'étude couvre la France métropolitaine, Corse comprise, de 2019 à 2024. Les fichiers
+décrivent les accidents corporels enregistrés par les forces de l'ordre, leurs lieux,
+les véhicules et les usagers concernés. Notre unité d'analyse est la participation d'un
+usager à un accident. Les probabilités étudiées portent donc sur la gravité parmi les
+personnes présentes dans ces enregistrements.
+
+La problématique retenue est la suivante~:
+\begin{quote}
+\itshape
+Quelles caractéristiques sont associées au décès ou à l'hospitalisation des usagers
+impliqués dans les accidents corporels enregistrés en métropole, et dans quelle mesure
+peut-on estimer la probabilité de cette issue sur une année ultérieure~?
+\end{quote}
+
+La première difficulté consiste à construire une base cohérente à partir des quatre
+fichiers de chaque année. Les informations décrivent des niveaux différents, les
+identifiants nécessitent une harmonisation et plusieurs lieux peuvent être associés
+au même accident. Une jointure mal définie pourrait ainsi compter plusieurs fois les
+mêmes usagers. Les codes inconnus, les valeurs atypiques et les informations manquantes
+demandent également des règles explicites. La préparation occupe donc une place centrale~:
+ses décisions doivent être justifiées et leurs effets vérifiés.
+
+L'analyse poursuit ensuite deux objectifs complémentaires. Le premier est descriptif
+et statistique~: caractériser la population, comparer les proportions de décès ou
+d'hospitalisations selon les groupes et étudier l'incertitude de ces écarts, en conservant
+le regroupement des usagers par accident. Le second est prédictif~: évaluer si plusieurs
+caractéristiques considérées ensemble permettent d'estimer ces probabilités mieux
+qu'une référence simple. Ce volet repose sur un apprentissage
+en 2019-2022, une validation en 2023 et une évaluation finale en 2024. Il porte sur
+des accidents déjà enregistrés~; la portée des prédictions dépend des informations
+retenues pour l'estimation et de leur instant de disponibilité.
+
+Les résultats sont interprétés au regard des limites de collecte, des informations
+inconnues et de la distinction entre association statistique et causalité. Les limites
+du regroupement «~décès ou hospitalisation~» sont également discutées.
+
+La première partie du rapport présente le cadrage et le cahier des charges, les sources
+BAAC, leur audit, la préparation, puis les analyses exploratoires et statistiques.
+Elle explique les difficultés rencontrées, les solutions retenues et les contrôles
+réalisés. La seconde présente le protocole prédictif, la référence constante, la régression
+logistique et leur évaluation. Une conclusion générale et un glossaire complètent
+le rapport.

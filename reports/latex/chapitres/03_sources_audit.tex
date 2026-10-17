@@ -1,0 +1,148 @@
+\chapter{Présentation des sources et audit de qualité}
+\label{chap:audit}
+
+Les notebooks 01 et 02 examinent les fichiers avant la préparation. Le premier permet
+de comprendre les relations sur 2024~; le second étend les contrôles aux six années.
+Leurs effectifs concernent les sources complètes, métropole et outre-mer. Les résultats
+du filtre métropolitain seront présentés au chapitre~\ref{chap:preparation}.
+
+\section{Sources et documentation de référence}
+Les extractions annuelles BAAC sont publiées sur data.gouv.fr~\cite{baac}. Le document
+de codification utilisé est la \textit{Description des bases de données annuelles des
+accidents corporels de la circulation routière, années 2005 à 2024}, datée du
+21 octobre 2025~\cite{doc-onisr}. Les constats du rapport correspondent aux 24 fichiers
+CSV fournis pour le projet et vérifiés le 16 octobre 2026. Une publication ultérieure
+pourrait modifier ces effectifs~; les empreintes des fichiers permettent d'identifier
+la version réellement analysée.
+
+La lecture utilise le séparateur point-virgule et préserve les identifiants en texte.
+Un code numérique ne devient pas pour autant une mesure~: \code{lum}, \code{catv}
+et \code{grav} désignent des catégories. Calculer une moyenne de leurs codes leur
+attribuerait une signification quantitative qui n'est pas celle de la documentation.
+
+\section{Quatre fichiers et plusieurs niveaux d'observation}
+\begin{table}[htbp]\centering\small\renewcommand{\arraystretch}{1.2}
+\caption{Rôle des fichiers annuels.}\label{tab:tables-source}
+\begin{tabularx}{\textwidth}{@{}lLL@{}}\toprule
+Fichier & Une ligne représente & Informations principales\\\midrule
+\code{caracteristiques} & Un accident & Date, heure, lumière, météo, localisation.\\
+\code{vehicules} & Un véhicule impliqué & Catégorie, manœuvre, obstacles, choc.\\
+\code{usagers} & Un usager impliqué & Catégorie, naissance, gravité, équipements.\\
+\code{lieux} & Un enregistrement de lieu & Route, circulation, profil, surface, limitation.\\\bottomrule
+\end{tabularx}
+\sourcecalcul{documentation ONISR et contrôles des notebooks 01 et 02}
+\end{table}
+
+La figure~\ref{fig:relations} représente les liens contrôlés au sein d'un millésime.
+Le couple accident-véhicule permet de rattacher les usagers au véhicule correspondant.
+Un conducteur et son passager partagent ce véhicule, tout en restant deux observations.
+La documentation précise qu'un piéton est rattaché au véhicule qui l'a heurté~:
+\code{catv} décrit alors ce véhicule et non le mode de déplacement du piéton.
+
+\begin{figure}[htbp]\centering
+\begin{tikzpicture}[box/.style={draw=anthracite!60,rounded corners=2pt,fill=black!2,text width=5.1cm,minimum height=1.35cm,align=left,font=\small},
+  edge/.style={-{Stealth[length=2.1mm]},thick,draw=terreCuite},every edge quotes/.style={font=\scriptsize}]
+\node[box] (c) at (-3.7,0) {\textbf{Caractéristiques}\\Une ligne par accident\\Clé : \code{Num_Acc}};
+\node[box] (v) at (3.7,0) {\textbf{Véhicules}\\Une ligne par véhicule impliqué\\Clé : accident + \code{id_vehicule}};
+\node[box] (l) at (-3.7,-3.2) {\textbf{Lieux sources}\\Une ou plusieurs lignes par accident\\Aucune clé véhicule dans le CSV};
+\node[box] (u) at (3.7,-3.2) {\textbf{Usagers}\\Une ligne par usager source\\Clé technique créée pour 2019-2024};
+\draw[edge] (c.east) -- node[above,font=\scriptsize,align=center]{1 vers plusieurs\\\code{Num_Acc}} (v.west);
+\draw[edge] (c.south) -- node[left,font=\scriptsize,align=right]{1 vers 1 à 5\\lignes observées} (l.north);
+\draw[edge] (v.south) -- node[left,font=\scriptsize,align=right]{1 vers 0 à plusieurs\\accident + véhicule} (u.north);
+\draw[edge] (c.south east) -- node[below,sloped,font=\scriptsize,align=center]{1 vers plusieurs\\\code{Num_Acc}} (u.north west);
+\end{tikzpicture}
+\caption{Relations contrôlées entre les tables sources. Les cardinalités décrivent les fichiers examinés ; elles sont vérifiées avant chaque jointure.}
+\label{fig:relations}
+\sourcecalcul{schéma du projet, à partir des notebooks 01 et 02}
+\end{figure}
+
+\section{Dimensions et différences de schéma}
+\begin{table}[htbp]\centering\small
+\caption{Nombre de lignes dans les sources complètes.}\label{tab:dimensions}
+\begin{tabularx}{\textwidth}{@{}lLLLL@{}}\toprule
+Année & Caractéristiques & Lieux & Véhicules & Usagers\\\midrule
+2019 & 58\,840 & 58\,840 & 100\,710 & 132\,977\\
+2020 & 47\,744 & 47\,744 & 81\,066 & 105\,295\\
+2021 & 56\,518 & 56\,518 & 97\,315 & 129\,248\\
+2022 & 55\,302 & 55\,302 & 94\,493 & 126\,662\\
+2023 & 54\,822 & 70\,860 & 93\,585 & 125\,789\\
+2024 & 54\,402 & 70\,248 & 92\,678 & 125\,187\\\bottomrule
+\end{tabularx}
+\sourcecalcul{notebook 02 ; nombre de lignes et non nombre de personnes pour toutes les colonnes}
+\end{table}
+
+Les caractéristiques comportent 15 colonnes, les lieux 18 et les véhicules 11. Les
+usagers passent de 15 à 16 colonnes en 2021 avec l'apparition de \code{id_usager}.
+En 2022, la clé des caractéristiques est nommée \code{Accident_Id}. Une concaténation
+sans harmonisation ferait donc apparaître deux colonnes pour un même rôle.
+
+Les espaces, dont des espaces insécables internes, concernent les identifiants de
+véhicule et d'usager. La préparation les retirera dans toutes les tables liées.
+Le contrôle vérifie qu'aucune valeur normalisée ne réunit plusieurs écritures brutes
+distinctes dans une même colonne~: aucune collision n'est détectée.
+
+\section{Clés, couverture et répétitions}
+La clé accident est complète et unique dans les caractéristiques. La clé
+\code{Num_Acc} + \code{id_vehicule} est unique dans les véhicules. Les identifiants
+d'usager sont complets et uniques lorsqu'ils existent. Les ensembles d'accidents
+des quatre tables sont identiques chaque année et chaque usager retrouve son véhicule.
+Ces contrôles portent sur les identifiants eux-mêmes, pas seulement sur des effectifs
+égaux.
+
+La relation inverse est différente~: certains véhicules n'ont pas d'usager associé.
+Sur les sources complètes, les nombres sont respectivement 2\,040, 1\,899, 6, 0, 40 et
+24 entre 2019 et 2024. Le PDF explique les 24 cas de 2024 par des conducteurs en fuite
+non créés dans la table des usagers~\cite{doc-onisr}. Cette explication ne doit pas être
+étendue automatiquement à tous les écarts des autres années. Aucun usager ni aucune
+gravité ne sont inventés pour compléter ces véhicules.
+
+En 2019 et 2020, 101 et 63 lignes d'usagers supplémentaires sont identiques sur tous
+leurs attributs sources. Sans identifiant individuel, ce constat ne prouve pas un
+double enregistrement~: deux passagers peuvent avoir les mêmes caractéristiques.
+Les lignes sont donc conservées et identifiées par leur rang source.
+
+\section{Pourquoi les lieux demandent un traitement particulier}
+Jusqu'en 2022, chaque accident possède une ligne de lieux. En 2023, 15\,870 accidents
+ont plusieurs lignes, contre 15\,645 en 2024, soit respectivement 28,95\,\% et 28,76\,\%
+des accidents des sources complètes. Le maximum observé est de cinq lignes. Certains
+attributs varient et ces lignes ne sont donc pas de simples copies exactes.
+
+L'accident \code{202400000005} illustre le problème. Quatre usagers sont associés à
+deux lignes de lieux portant le même nom de voie, mais avec des limitations de 50 et
+70 km/h et des profils de route différents. Une jointure brute sur \code{Num_Acc}
+produirait huit lignes. La moyenne de 60 km/h, ou le choix de la première ligne,
+n'aurait pas de justification comme limitation du lieu de chaque usager.
+
+Dans sa réponse du 12 décembre 2024 à la discussion «~lieux-2023~», l'ONISR explique
+que plusieurs lieux peuvent être décrits aux intersections, en lien avec les véhicules
+concernés~\cite{discussion-lieux}. Les CSV reçus ne fournissent toutefois aucune clé
+véhicule dans \code{lieux}. Le projet retiendra donc des informations communes au
+niveau de l'accident. Cette explication ne démontre pas pourquoi la représentation
+multiple apparaît à partir de 2023 dans ces exports.
+
+\section{Codes, informations inconnues et plausibilité}
+Le sens d'un code dépend de sa variable. \code{trajet = 0} désigne une information
+non renseignée, alors que \code{secu1 = 0} signifie aucun équipement et
+\code{vosp = 0} sans objet. Un remplacement global des zéros détruirait ces distinctions.
+Certains codes observés sont absents de la rubrique du PDF, notamment 7 et 8 dans
+\code{actp}. Ils sont signalés sans leur attribuer un sens supposé.
+
+Les sources complètes contiennent 419 gravités inconnues~: 60 en 2021, 241 en 2022 et
+118 en 2023. L'audit relève aussi 191 âges approximatifs supérieurs à 110 ans, issus
+des naissances 1900 ou 1901 en 2019-2020. Des naissances manquantes apparaissent à partir
+de 2021. Le PDF signale l'ajout d'usagers en fuite depuis 2021, avec des informations
+parfois manquantes~\cite{doc-onisr}. Cette évolution constitue un contexte de collecte~;
+elle ne permet pas d'identifier la cause de chaque valeur absente.
+
+Les dates, heures et coordonnées passent les contrôles élémentaires appliqués~:
+interprétation, concordance d'année et limites mondiales. Cela ne garantit pas que la
+position GPS correspond au lieu réel. Le contrôle des communes métropolitaines révèle
+trois discordances avec le département en 2019 et un code \code{N/C} en 2022. Sans
+référentiel historique ni vérification complémentaire, l'audit ne choisit pas lequel
+des deux renseignements corriger.
+
+\FloatBarrier
+\bilan{Les six années peuvent être réunies après harmonisation. Les risques principaux
+concernent la multiplication des usagers par les lieux, la confusion entre codes
+spéciaux et valeurs ordinaires, et une suppression injustifiée d'observations similaires.
+Le chapitre suivant transforme ces constats en règles vérifiables.}

@@ -1,0 +1,64 @@
+{
+  "notebook": "04_exploratory_data_analysis.ipynb",
+  "période_explorée": [
+    2019,
+    2020,
+    2021,
+    2022
+  ],
+  "population": "usagers impliqués dans des accidents corporels enregistrés en métropole, Corse comprise",
+  "unité": "usager source",
+  "fichier_préparé": "data/processed/baac_usagers_metropole_2019_2024.csv.gz",
+  "sha256_fichier_préparé": "f7f4661ad2cb49ad50b40e843a294b9da82bbea8d5f67e4630e07ca8b325a720",
+  "python": "3.12.3",
+  "pandas": "3.0.6",
+  "matplotlib": "3.11.2",
+  "cible": "décès ou hospitalisation : grav 2 ou 3 ; grav inconnue exclue du dénominateur des proportions positives",
+  "bornes_age": [
+    0,
+    18,
+    25,
+    35,
+    45,
+    55,
+    65,
+    75,
+    111
+  ],
+  "bornes_age_droite_exclue": true,
+  "proportion_positive_globale_pct": 17.787355029877173,
+  "catégories_inconnues": "conservées dans les tableaux, exclues des graphiques de comparaison des modalités renseignées",
+  "lignes": 467348,
+  "cibles_connues": 467079,
+  "cibles_inconnues": 269,
+  "figures": [
+    "04_01_effectifs_annuels.png",
+    "04_02_distribution_age.png",
+    "04_03_categories_usagers.png",
+    "04_04_repartition_gravite.png",
+    "04_05_gravite_selon_age.png",
+    "04_06_gravite_selon_categorie.png",
+    "04_07_gravite_selon_lumiere.png",
+    "04_08_gravite_selon_agglomeration.png"
+  ],
+  "tableaux": [
+    "04_population_annuelle.csv",
+    "04_population_categories.csv",
+    "04_population_gravite.csv",
+    "04_population_cible.csv",
+    "04_statistiques_age.csv",
+    "04_gravite_selon_age.csv",
+    "04_gravite_selon_categorie.csv",
+    "04_gravite_selon_lumiere.csv",
+    "04_gravite_selon_agglomeration.csv",
+    "04_comparaisons_annuelles.csv"
+  ],
+  "limites": [
+    "comparaisons descriptives non causales",
+    "absence de données d'exposition",
+    "dépendance entre usagers d'un même accident",
+    "hospitalisation : limites de collecte",
+    "âge inconnu associé à un profil de gravité différent",
+    "2024 déjà examiné dans les audits précédents"
+  ]
+}

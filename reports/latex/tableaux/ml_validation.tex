@@ -1,0 +1,14 @@
+\begin{table}[htbp]
+\centering\small
+\renewcommand{\arraystretch}{1.18}
+\caption{Scores de validation de la référence et du modèle retenu, 2023.}\label{tab:ml-validation}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrr@{}}
+\toprule
+Modèle & Log-loss & Brier & AP & ROC-AUC \\
+\midrule
+Référence constante & 0,4709 & 0,1474 & 0,1797 & 0,5000 \\
+Régression logistique & 0,4008 & 0,1271 & 0,4085 & 0,7699 \\
+\bottomrule
+\end{tabular*}
+\sourcecalcul{notebook 06 ; comparaison après sélection sur cette même année}
+\end{table}

@@ -1,0 +1,140 @@
+\chapter{Construire une estimation probabiliste de la gravité}
+\label{chap:protocole-ml}
+
+Les analyses précédentes comparent les groupes séparément. Elles montrent des écarts,
+mais ne disent pas comment plusieurs caractéristiques, considérées ensemble, permettent
+d'estimer une issue individuelle. Le volet prédictif répond à cette seconde question.
+Son résultat est une probabilité de décès ou d'hospitalisation parmi les usagers
+d'accidents corporels enregistrés. Aucun scénario de prédiction avant un trajet n'est
+défini dans cette étude.
+
+\section{Ce que le modèle cherche à estimer}
+Pour un usager décrit par $x$, la quantité estimée est
+\[
+  p(x)=\mathbb{P}(Y=1\mid X=x,\ \text{usager présent dans BAAC}).
+\]
+La cible $Y$ conserve la définition du chapitre~\ref{chap:cadrage}. Les gravités
+inconnues sont exclues de l'ajustement et des scores, après comptage. Le modèle ne
+distingue donc pas les décès des hospitalisations à l'intérieur de la classe positive.
+
+La comparaison est volontairement limitée à une référence constante et à une
+régression logistique. Cette dernière combine plusieurs caractéristiques, produit
+directement des probabilités et permet une lecture des coefficients. Un modèle plus
+complexe n'est pas nécessaire pour vérifier si ces informations apportent déjà un gain.
+Ce choix limite aussi le nombre d'expériences utilisées pour sélectionner une solution.
+
+\section{Séparer les années avant l'apprentissage}
+L'apprentissage porte sur 2019-2022, la validation sur 2023 et le test final sur 2024.
+La validation sert à choisir le réglage du modèle. Le test sert ensuite à mesurer les
+performances de cette configuration sur une année ultérieure.
+\input{tableaux/ml_population}
+
+Une séparation par année maintient tous les usagers d'un accident dans la même
+partition. Elle évite qu'un conducteur soit utilisé pour apprendre tandis qu'un
+passager du même accident servirait à évaluer le modèle. Elle conserve également les
+changements entre millésimes dans l'évaluation.
+
+L'année 2024 a toutefois été examinée lors des audits de structure. Ce test est donc
+\textbf{rétrospectif et chronologique}, et non une expérience prospective sur un jeu
+resté totalement inconnu. Ses scores n'ont pas servi à sélectionner les variables,
+les valeurs de régularisation ou le seuil. Maintenant qu'ils sont consultés, cette
+année ne peut plus être réutilisée comme un nouveau test vierge.
+
+\section{Choisir des variables et rendre leur représentation explicite}
+Onze variables sources sont retenues avant la comparaison des scores. Elles décrivent
+l'usager, le véhicule associé et les circonstances de l'accident.
+
+\begin{table}[htbp]\centering\small
+\caption{Variables du premier modèle et représentation retenue.}\label{tab:variables-ml}
+\renewcommand{\arraystretch}{1.17}
+\begin{tabularx}{\textwidth}{@{}lLL@{}}\toprule
+Famille & Variables sources & Représentation et précautions\\\midrule
+Usager & \code{age_approx}, \code{sexe}, \code{catu} & Âge en huit tranches fixes ; sexe et catégorie comme modalités.\\
+Véhicule & \code{catv} & Catégorie du véhicule associé ; véhicule heurtant pour un piéton.\\
+Contexte & \code{lum}, \code{agg}, \code{int}, \code{atm} & Lumière, agglomération, intersection et conditions atmosphériques.\\
+Temps & \code{mois_accident}, \code{jour_semaine}, \code{heure_accident} & Mois, jour et heure traités comme catégories.\\\bottomrule
+\end{tabularx}
+\sourcecalcul{notebook 06 et module \code{src/baac_ml.py}}
+\end{table}
+
+L'âge reprend les groupes de l'exploration~: 0-17, 18-24, 25-34, 35-44, 45-54,
+55-64, 65-74 et 75 ans ou plus. Les bornes ne sont pas optimisées sur 2023.
+Cette représentation rend les effets lisibles, au prix d'une perte de précision
+à l'intérieur de chaque tranche. Le traitement catégoriel du temps évite d'imposer
+une relation linéaire entre le numéro d'une heure et les log-cotes de gravité.
+
+Une valeur absente devient la modalité «~Non renseigné~». Il n'y a pas d'imputation
+par une moyenne calculée sur les six années. L'encodage indicateur, ou \textit{one-hot},
+crée une colonne 0/1 par modalité observée dans l'apprentissage. Avec toutes les
+modalités conservées, la matrice comporte \textbf{117 colonnes}. Une catégorie nouvelle
+est comptée et encodée en zéros pour son champ, sans réajuster l'encodeur.
+
+Les identifiants, la provenance, l'année, la gravité et ses dérivés sont exclus.
+Les indicateurs de qualité et variantes brutes déjà représentées ne sont pas ajoutés.
+Les champs de lieux sont laissés hors de ce premier modèle en raison des difficultés
+de représentation mises en évidence en 2023. Les équipements, manœuvres et détails du
+choc sont également hors périmètre, sans être tous qualifiés de fuites de cible.
+
+Ces variables proviennent de fiches décrivant un accident déjà enregistré. Leur
+présence dans un fichier final ne prouve pas leur disponibilité à un instant de décision.
+La représentation des valeurs manquantes peut notamment refléter la saisie après
+l'accident. Cette limite concerne l'interprétation et toute utilisation envisagée.
+
+\section{Une référence constante et une régression logistique}
+La référence attribue à tous les usagers la fréquence positive de l'apprentissage~:
+\[
+  \widehat p_0=\frac{83\,081}{467\,079}\simeq 0{,}17787.
+\]
+Elle ne connaît ni les fréquences de 2023 et 2024, ni les caractéristiques des usagers
+évalués. Elle fournit un point de comparaison plus informatif qu'un score de modèle isolé.
+
+La régression logistique transforme une combinaison des colonnes encodées $z_j(x)$
+en probabilité~\cite{sklearn-logistique}~:
+\[
+  \widehat p(x)=\frac{1}{1+\exp[-\eta(x)]},\qquad
+  \eta(x)=\beta_0+\sum_{j=1}^{117}\beta_j z_j(x).
+\]
+Le critère ajusté est la somme des pertes logarithmiques, avec une pénalisation L2
+des coefficients. Sans pondération des observations, on peut l'écrire~:
+\[
+  \min_{\beta_0,\beta}\left\{
+  \sum_{i=1}^{n}\big[-y_i\log\widehat p_i-(1-y_i)\log(1-\widehat p_i)\big]
+  +\frac{1}{2C}\sum_{j=1}^{117}\beta_j^2\right\}.
+\]
+Un petit $C$ impose une pénalisation plus forte. Chaque usager contribue au critère~;
+un accident avec plusieurs usagers contribue donc davantage qu'un accident avec un seul
+usager. Cette pondération correspond à l'unité retenue, mais ne rend pas les observations
+d'un même accident indépendantes.
+
+L'encodeur et le modèle sont réunis dans une pipeline ajustée uniquement sur 2019-2022.
+Le solveur \code{lbfgs} utilise une tolérance de $10^{-6}$ et au plus 1\,500 itérations.
+Une non-convergence interrompt la comparaison. Aucune pondération ou duplication des
+classes n'est appliquée~: aucun coût métier des erreurs n'a été défini.
+
+\section{Évaluer des probabilités et un classement}
+La log-loss est le critère principal de sélection~\cite{sklearn-logloss}~:
+\[
+ \mathrm{LL}=-\frac1n\sum_{i=1}^n
+ \left[y_i\log\widehat p_i+(1-y_i)\log(1-\widehat p_i)\right].
+\]
+Elle pénalise particulièrement une probabilité très assurée lorsqu'elle contredit
+l'issue observée. Le score de Brier mesure l'écart quadratique moyen entre probabilités
+et cibles~\cite{sklearn-brier}~:
+\[
+ \mathrm{Brier}=\frac1n\sum_{i=1}^n(\widehat p_i-y_i)^2.
+\]
+Pour ces deux indicateurs, une valeur plus petite est préférable. Leur amélioration ne
+suffit toutefois pas à établir une bonne calibration dans chaque groupe.
+
+Deux indicateurs complètent la lecture. La ROC-AUC mesure la capacité à classer un cas
+positif au-dessus d'un cas négatif, en tenant compte des ex æquo~\cite{sklearn-roc}.
+L'\textit{average precision} (AP) résume la courbe précision-rappel par une somme
+pondérée par les gains de rappel~\cite{sklearn-ap}. Elle n'est pas une aire calculée
+par interpolation trapézoïdale. Pour un score constant, elle vaut ici la proportion
+positive de l'année évaluée, même si la probabilité constante vient de l'apprentissage.
+
+\FloatBarrier
+\bilan{L'expérience est définie avant le test~: une cible binaire, onze variables,
+un encodeur appris sur les années antérieures, une référence constante et une seule
+famille de modèles. Elle évalue un apport prédictif rétrospectif, avec des limites de
+collecte et de disponibilité des variables explicites.}

@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "date_execution_utc": "2026-10-17T12:59:49.662806+00:00",
+  "configuration_06_sha256": "973510756908e71ededac5be85f294cb665e9e699e09b21a26b2dd34cb84f68d",
+  "sha256_donnees": "f7f4661ad2cb49ad50b40e843a294b9da82bbea8d5f67e4630e07ca8b325a720",
+  "sha256_schema": "22a2862543e4e2926a808826197b3af94b5c35dc5b3df37907502efb1cfd4478",
+  "sha256_module": "8f758007438a2d3198790f836ff789a30b730cdb856dddb66b4a3b9702268363",
+  "apprentissage": [
+    2019,
+    2020,
+    2021,
+    2022
+  ],
+  "validation_reglage": 2023,
+  "test": 2024,
+  "modele_arrete_avant_test": "regression_logistique",
+  "C_arrete_avant_test": 1.0,
+  "seuil_illustratif_arrete": 0.5,
+  "refit_sur_2023": false,
+  "tolerance_reconstruction_absolue": 0.0001,
+  "ajustement_apres_consultation_du_test": false,
+  "diagnostics": [
+    "calibration dix intervalles fixes",
+    "précision-rappel",
+    "catégorie d'usager",
+    "tranche d'âge",
+    "présence âge et sexe"
+  ],
+  "incertitude": "scores descriptifs ; aucun intervalle supposant les usagers indépendants",
+  "environnement": {
+    "python": "3.12.3",
+    "pandas": "3.0.6",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "scikit_learn": "1.9.1",
+    "matplotlib": "3.11.2"
+  }
+}

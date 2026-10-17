@@ -1,0 +1,15 @@
+\begin{table}[htbp]
+\centering\small
+\renewcommand{\arraystretch}{1.18}
+\caption{Matrice de confusion sur 2024, seuil illustratif de 0,5.}\label{tab:ml-confusion}
+\begin{tabularx}{\textwidth}{@{}Lrr@{}}
+\toprule
+Issue observée & Prédiction 0 & Prédiction 1 \\
+\midrule
+Indemne ou blessé léger & 92\,962 & 3\,292 \\
+Décès ou hospitalisation & 17\,194 & 3\,830 \\
+\textbf{Total} & 110\,156 & 7\,122 \\
+\bottomrule
+\end{tabularx}
+\sourcecalcul{notebook 07 ; classes observées en lignes, classes prédites en colonnes}
+\end{table}

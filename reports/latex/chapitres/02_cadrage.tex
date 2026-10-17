@@ -1,0 +1,122 @@
+\chapter{Cadrage du projet et cahier des charges}
+\label{chap:cadrage}
+
+Une étude de gravité demande de préciser la population concernée avant de choisir une
+méthode. Un nombre de personnes blessées, une proportion parmi les usagers impliqués
+et un risque par kilomètre parcouru répondent à des questions différentes. Ce chapitre
+fixe les objectifs, les conventions et les résultats attendus du projet.
+
+\section{Finalité et questions de recherche}
+Le projet vise à construire une étude reproductible sur des données publiques, depuis
+leur audit jusqu'à l'interprétation des résultats. Le socle porte sur la qualité des
+données et les analyses statistiques. Le volet prédictif complète l'étude
+par la comparaison d'une référence constante et d'une régression logistique sur une
+année ultérieure.
+
+Trois questions structurent la première partie. Comment les catégories de gravité se
+répartissent-elles dans la population enregistrée~? Quelles différences observe-t-on
+selon l'âge, la catégorie d'usager, la lumière et l'agglomération~? Quelle variabilité
+ces différences présentent-elles sous un schéma de rééchantillonnage qui respecte les
+usagers d'un même accident~? Les comparaisons retenues sont en nombre limité et leur
+sélection après exploration est déclarée.
+
+Le volet Machine Learning vise à mesurer un gain par rapport à une probabilité
+constante, puis à examiner les erreurs et la qualité des probabilités estimées. Son
+intérêt est méthodologique~: aucune nécessité opérationnelle d'un outil de scoring
+n'a été démontrée à ce stade. Une future utilisation demanderait de définir une décision,
+un utilisateur et l'instant auquel les variables seraient disponibles.
+
+\section{Périmètre et unité d'analyse}
+La fenêtre choisie couvre six millésimes consécutifs, de 2019 à 2024. Le périmètre
+géographique est la France métropolitaine, Corse comprise. Les sources complètes sont
+conservées et auditées avant la sélection de la métropole. Ce choix rend explicite la
+population étudiée~; il ne suppose pas une homogénéité des conditions de circulation
+entre tous les territoires retenus.
+
+Une observation représente \textbf{un usager source impliqué dans un accident}.
+Deux occupants d'un véhicule restent deux observations, même si leurs caractéristiques
+sont identiques. L'identifiant de ligne créé pendant la préparation n'est pas une clé
+de personne permettant de la suivre d'un accident ou d'une année à l'autre.
+
+Les personnes indemnes de BAAC sont impliquées dans des accidents corporels enregistrés.
+Elles ne forment pas un groupe témoin de trajets sans accident. Les probabilités étudiées
+restent donc conditionnelles à la présence dans ces enregistrements. Une comparaison
+du risque par déplacement demanderait des données d'exposition supplémentaires.
+
+\section{Définition de la gravité étudiée}
+La variable \code{grav} comporte quatre modalités dont le sens est donné par la
+documentation ONISR~\cite{doc-onisr}. Le décès est défini sur le coup ou dans les
+30 jours suivant l'accident~; la catégorie hospitalisée correspond à plus de 24 heures
+d'hospitalisation. Le tableau~\ref{tab:cible} présente le regroupement retenu.
+
+\begin{table}[htbp]\centering\small
+\caption{Modalités de gravité et cible principale.}\label{tab:cible}
+\begin{tabularx}{\textwidth}{@{}lLl@{}}\toprule
+Code & Modalité originale & Cible $Y$\\\midrule
+1 & Indemne & 0\\
+2 & Tué & 1\\
+3 & Blessé hospitalisé & 1\\
+4 & Blessé léger & 0\\
+Autre / inconnu & Information non exploitable & Manquante\\\bottomrule
+\end{tabularx}
+\sourcecalcul{documentation ONISR et convention du projet}
+\end{table}
+
+La cible est intitulée \textit{décès ou hospitalisation}. Ce choix exprime une issue
+compréhensible et fournit davantage de cas positifs que les décès seuls pour examiner
+les sous-populations. Il ne résulte pas d'une recherche du meilleur score prédictif.
+Les quatre modalités originales restent disponibles et les décès seuls font l'objet
+d'une analyse complémentaire.
+
+Ce regroupement n'est pas une définition médicale des blessures graves. La documentation
+signale une modification de la saisie de l'hospitalisation depuis 2018 et l'absence de
+labellisation de cet indicateur depuis 2019~\cite{doc-onisr}. Cette limite concerne toute
+interprétation de la cible, y compris lorsque les calculs sont techniquement corrects.
+Une gravité inconnue ne reçoit jamais automatiquement la valeur zéro.
+
+\section{Exigences de préparation et de qualité}
+Une transformation doit être accompagnée d'une raison et d'un contrôle. La préparation
+vise à préserver les observations retenues, à rendre les informations inexploitables
+visibles et à éviter les corrections fondées sur une supposition.
+
+\begin{table}[htbp]\centering\small\renewcommand{\arraystretch}{1.2}
+\caption{Exigences du cahier des charges pour la première partie.}\label{tab:exigences}
+\begin{tabularx}{\textwidth}{@{}LL@{}}\toprule
+Exigence & Critère de vérification\\\midrule
+Traçabilité & Fichier source, rang de l'enregistrement, manifeste et empreintes SHA-256.\\
+Clés cohérentes & Identifiants préparés en texte, clés complètes et absence de collisions.\\
+Conservation des usagers & Identifiants et effectifs identiques avant et après les jointures.\\
+Valeurs inconnues explicites & Règles par variable, sans remplacement global des zéros.\\
+Lieux multiples maîtrisés & Une ligne de résumé par accident et désaccords signalés.\\
+Analyses vérifiables & Effectifs, dénominateurs, proportions et origine des figures précisés.\\
+Reproductibilité & Lecture des exports conforme aux types et valeurs de la table préparée.\\\bottomrule
+\end{tabularx}
+\end{table}
+
+Les livrables sont les sept notebooks, le module ML partagé, les deux tables préparées,
+les bilans de contrôle, les règles de lecture, les tableaux et figures, ainsi que
+le présent rapport avec ses sources LaTeX. Le README, le fichier de dépendances et
+le Makefile décrivent et facilitent l'installation. Une base SQL, une application web ou une extension en recherche
+opérationnelle ne conditionnent pas la réussite de cette première version.
+
+\section{Organisation temporelle et état du travail}
+Les analyses destinées à guider les modèles sont limitées à 2019-2022. La validation
+prédictive utilise 2023 et l'évaluation finale 2024. Cette dernière année a déjà été
+examinée dans la découverte et les audits~: le test est donc chronologique et
+rétrospectif, sans statut de jeu resté entièrement inconnu. Ses performances ne servent
+pas à choisir les variables ou à régler les modèles.
+
+Les règles de préparation sont déterministes. Aucune imputation par une moyenne des
+six années, standardisation apprise ou sélection fondée sur les performances n'a été
+effectuée. L'encodage du volet ML est ajusté sur l'apprentissage uniquement.
+
+La première partie réalise les objectifs de préparation, d'exploration et de
+comparaison statistique. La seconde examine les caractéristiques simultanément et
+compare les probabilités estimées à la référence. Aucun seuil arbitraire de performance
+n'est imposé~: les gains comme les limites font partie des résultats à analyser.
+
+\FloatBarrier
+\bilan{Le cahier des charges fixe une population, une unité et une cible explicites.
+La réussite repose d'abord sur des données traçables et des conclusions correctement
+délimitées. Le volet prédictif évalue ensuite ce que les informations disponibles
+permettent effectivement d'estimer.}

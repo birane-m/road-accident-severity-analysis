@@ -1,0 +1,9 @@
+modele,metrique,score_06,score_reconstruit,ecart_absolu
+Régression logistique,log_loss,0.4007969068383853,0.4007969068383853,0.0
+Régression logistique,brier,0.12710227820010855,0.12710227820010855,0.0
+Régression logistique,average_precision,0.40851400468432075,0.40851400468432075,0.0
+Régression logistique,roc_auc,0.7699148399626151,0.7699148399626151,0.0
+Référence constante,log_loss,0.47088808772302493,0.47088808772302493,0.0
+Référence constante,brier,0.14738533582463986,0.14738533582463986,0.0
+Référence constante,average_precision,0.17965978272834268,0.17965978272834268,0.0
+Référence constante,roc_auc,0.5,0.5,0.0

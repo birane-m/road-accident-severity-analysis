@@ -1,0 +1,3 @@
+modele,seuil,vrais_negatifs,fausses_alertes,cas_manques,vrais_positifs,alertes,precision,rappel,accuracy
+Référence constante,0.5,96883,0,21218,0,0,,0.0,0.8203402172716573
+Régression logistique,0.5,93460,3423,17367,3851,7274,0.5294198515259829,0.18149684230370441,0.823964234003099

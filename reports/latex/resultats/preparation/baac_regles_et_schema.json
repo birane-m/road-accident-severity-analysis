@@ -1,0 +1,1167 @@
+{
+  "version_regles": "1.1",
+  "marqueur_na_csv": "__BAAC_MANQUANT__",
+  "date_decision": "2026-10-16",
+  "environnement": {
+    "python": "3.12.3",
+    "pandas": "3.0.6"
+  },
+  "perimetre": "France métropolitaine, Corse comprise, 2019-2024",
+  "unite": "un usager source par ligne ; aucun suivi longitudinal des personnes",
+  "source_ligne": "rang d'enregistrement CSV à partir de 1, hors en-tête",
+  "codes_metropole": [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "21",
+    "22",
+    "23",
+    "24",
+    "25",
+    "26",
+    "27",
+    "28",
+    "29",
+    "2A",
+    "2B",
+    "30",
+    "31",
+    "32",
+    "33",
+    "34",
+    "35",
+    "36",
+    "37",
+    "38",
+    "39",
+    "40",
+    "41",
+    "42",
+    "43",
+    "44",
+    "45",
+    "46",
+    "47",
+    "48",
+    "49",
+    "50",
+    "51",
+    "52",
+    "53",
+    "54",
+    "55",
+    "56",
+    "57",
+    "58",
+    "59",
+    "60",
+    "61",
+    "62",
+    "63",
+    "64",
+    "65",
+    "66",
+    "67",
+    "68",
+    "69",
+    "70",
+    "71",
+    "72",
+    "73",
+    "74",
+    "75",
+    "76",
+    "77",
+    "78",
+    "79",
+    "80",
+    "81",
+    "82",
+    "83",
+    "84",
+    "85",
+    "86",
+    "87",
+    "88",
+    "89",
+    "90",
+    "91",
+    "92",
+    "93",
+    "94",
+    "95"
+  ],
+  "cible": {
+    "nom": "cible_deces_hospitalisation",
+    "1": [
+      2,
+      3
+    ],
+    "0": [
+      1,
+      4
+    ],
+    "autres": "manquante, ligne conservée ; exclusion pour les tâches supervisées"
+  },
+  "age": {
+    "formule": "année accident - année naissance",
+    "intervalle_retenu": [
+      0,
+      110
+    ],
+    "hors_intervalle": "âge préparé manquant, âge brut et indicateur conservés"
+  },
+  "lieux": {
+    "niveau": "accident",
+    "une_valeur_connue": "conserver",
+    "plusieurs_valeurs_connues": "manquante avec indicateur de désaccord",
+    "connue_et_inconnue": "conserver si unique et signaler information partielle",
+    "toutes_inconnues": "manquante",
+    "source_explication": "Réponse DSR ONISR du 12 décembre 2024, discussion lieux-2023 sur data.gouv.fr"
+  },
+  "commune": {
+    "format": "5 chiffres, ou 2A/2B suivi de 3 chiffres",
+    "format_non_interpretable": "manquante, valeur brute conservée",
+    "prefixe_different_du_departement": "valeur conservée avec alerte, à examiner"
+  },
+  "vma": {
+    "valeurs_non_positives": "manquantes",
+    "seuil_alerte": 130,
+    "au_dessus_du_seuil": "conservée avec alerte, à examiner avant exploitation"
+  },
+  "codes_documentes": {
+    "caracteristiques": {
+      "lum": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "agg": [
+        1,
+        2
+      ],
+      "int": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "atm": [
+        -1,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "col": [
+        -1,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    "lieux": {
+      "catr": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        9
+      ],
+      "circ": [
+        -1,
+        1,
+        2,
+        3,
+        4
+      ],
+      "vosp": [
+        -1,
+        0,
+        1,
+        2,
+        3
+      ],
+      "prof": [
+        -1,
+        1,
+        2,
+        3,
+        4
+      ],
+      "plan": [
+        -1,
+        1,
+        2,
+        3,
+        4
+      ],
+      "surf": [
+        -1,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "infra": [
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "situ": [
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8
+      ]
+    },
+    "vehicules": {
+      "senc": [
+        -1,
+        0,
+        1,
+        2,
+        3
+      ],
+      "catv": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        50,
+        60,
+        80,
+        99
+      ],
+      "obs": [
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "obsm": [
+        -1,
+        0,
+        1,
+        2,
+        4,
+        5,
+        6,
+        9
+      ],
+      "choc": [
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "manv": [
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "motor": [
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    "usagers": {
+      "catu": [
+        1,
+        2,
+        3
+      ],
+      "grav": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "sexe": [
+        1,
+        2
+      ],
+      "trajet": [
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        9
+      ],
+      "secu1": [
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "secu2": [
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "secu3": [
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "locp": [
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "actp": [
+        -1,
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        9,
+        "A",
+        "B"
+      ],
+      "etatp": [
+        -1,
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  "codes_inconnus_documentes": {
+    "vehicules.senc": [
+      "0"
+    ],
+    "vehicules.catv": [
+      "0"
+    ],
+    "vehicules.manv": [
+      "0"
+    ],
+    "vehicules.motor": [
+      "0"
+    ],
+    "usagers.trajet": [
+      "0"
+    ],
+    "usagers.secu1": [
+      "8"
+    ],
+    "usagers.secu2": [
+      "8"
+    ],
+    "usagers.secu3": [
+      "8"
+    ],
+    "usagers.locp": [
+      "9"
+    ],
+    "usagers.actp": [
+      "B"
+    ]
+  },
+  "codes_catv_retires": [
+    "11",
+    "12",
+    "18",
+    "19",
+    "4",
+    "5",
+    "6",
+    "8",
+    "9"
+  ],
+  "partition": {
+    "apprentissage": [
+      2019,
+      2020,
+      2021,
+      2022
+    ],
+    "validation": [
+      2023
+    ],
+    "test": [
+      2024
+    ]
+  },
+  "limites": [
+    "hospitalisation : indicateur imparfait et limites de collecte depuis 2018",
+    "2024 déjà exploré dans les notebooks de découverte et d'audit",
+    "aucune attribution certaine du lieu au véhicule à une intersection",
+    "coordonnées seulement contrôlées par leurs limites mondiales",
+    "indicateurs de multiplicité des lieux sensibles au millésime",
+    "catv des piétons décrit le véhicule qui les a heurtés"
+  ],
+  "colonnes": [
+    {
+      "nom": "Num_Acc",
+      "dtype": "string",
+      "rôle": "identifiant"
+    },
+    {
+      "nom": "id_vehicule",
+      "dtype": "string",
+      "rôle": "identifiant"
+    },
+    {
+      "nom": "num_veh_usager",
+      "dtype": "string",
+      "rôle": "identifiant"
+    },
+    {
+      "nom": "place",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "catu",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "grav",
+      "dtype": "string",
+      "rôle": "résultat_ou_disponibilité_de_la_cible"
+    },
+    {
+      "nom": "sexe",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "an_nais",
+      "dtype": "Int64",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "trajet",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "secu1",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "secu2",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "secu3",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "locp",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "actp",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "etatp",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "source_ligne_usagers",
+      "dtype": "Int64",
+      "rôle": "provenance"
+    },
+    {
+      "nom": "source_fichier_usagers",
+      "dtype": "str",
+      "rôle": "provenance"
+    },
+    {
+      "nom": "catu_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "grav_brut",
+      "dtype": "string",
+      "rôle": "résultat_ou_disponibilité_de_la_cible"
+    },
+    {
+      "nom": "sexe_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "trajet_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "secu1_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "secu2_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "secu3_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "locp_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "actp_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "etatp_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "id_usager",
+      "dtype": "string",
+      "rôle": "identifiant"
+    },
+    {
+      "nom": "id_observation",
+      "dtype": "string",
+      "rôle": "identifiant"
+    },
+    {
+      "nom": "annee_source",
+      "dtype": "int64",
+      "rôle": "découpage_temporel"
+    },
+    {
+      "nom": "an_nais_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "age_approx_brut",
+      "dtype": "Int64",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "age_suspect",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "age_approx",
+      "dtype": "Int64",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "age_manquant",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "cible_deces_hospitalisation",
+      "dtype": "Int64",
+      "rôle": "résultat_ou_disponibilité_de_la_cible"
+    },
+    {
+      "nom": "cible_connue",
+      "dtype": "boolean",
+      "rôle": "résultat_ou_disponibilité_de_la_cible"
+    },
+    {
+      "nom": "role_temporel",
+      "dtype": "str",
+      "rôle": "découpage_temporel"
+    },
+    {
+      "nom": "num_veh_vehicule",
+      "dtype": "string",
+      "rôle": "identifiant"
+    },
+    {
+      "nom": "senc",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "catv",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "obs",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "obsm",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "choc",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "manv",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "motor",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "occutc",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "source_ligne_vehicules",
+      "dtype": "Int64",
+      "rôle": "provenance"
+    },
+    {
+      "nom": "source_fichier_vehicules",
+      "dtype": "str",
+      "rôle": "provenance"
+    },
+    {
+      "nom": "senc_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "catv_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "obs_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "obsm_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "choc_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "manv_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "motor_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "jour",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "mois",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "an",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "hrmn",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "lum",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "dep",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "com",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "agg",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "int",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "atm",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "col",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "adr",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "lat",
+      "dtype": "Float64",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "long",
+      "dtype": "Float64",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "source_ligne_caracteristiques",
+      "dtype": "Int64",
+      "rôle": "provenance"
+    },
+    {
+      "nom": "source_fichier_caracteristiques",
+      "dtype": "str",
+      "rôle": "provenance"
+    },
+    {
+      "nom": "dep_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "lum_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "agg_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "int_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "atm_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "col_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "com_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "com_a_verifier",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "date_accident",
+      "dtype": "datetime64[us]",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "mois_accident",
+      "dtype": "Int64",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "jour_semaine",
+      "dtype": "Int64",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "heure_accident",
+      "dtype": "Int64",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "minute_accident",
+      "dtype": "Int64",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "lat_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "long_brut",
+      "dtype": "string",
+      "rôle": "valeur_source_ou_estimation_brute"
+    },
+    {
+      "nom": "nb_lignes_lieux",
+      "dtype": "Int64",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_catr",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "lieu_catr_desaccord",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_catr_partiel",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_circ",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "lieu_circ_desaccord",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_circ_partiel",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_vosp",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "lieu_vosp_desaccord",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_vosp_partiel",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_prof",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "lieu_prof_desaccord",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_prof_partiel",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_plan",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "lieu_plan_desaccord",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_plan_partiel",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_surf",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "lieu_surf_desaccord",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_surf_partiel",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_infra",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "lieu_infra_desaccord",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_infra_partiel",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_situ",
+      "dtype": "string",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "lieu_situ_desaccord",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_situ_partiel",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_nbv",
+      "dtype": "Int64",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "lieu_nbv_desaccord",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_nbv_partiel",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_vma",
+      "dtype": "Float64",
+      "rôle": "variable_descriptive_à_examiner_avant_modélisation"
+    },
+    {
+      "nom": "lieu_vma_desaccord",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_vma_partiel",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    },
+    {
+      "nom": "lieu_vma_a_verifier",
+      "dtype": "boolean",
+      "rôle": "indicateur_de_qualité_à_examiner"
+    }
+  ]
+}

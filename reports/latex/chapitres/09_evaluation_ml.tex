@@ -1,0 +1,120 @@
+\chapter{Évaluation sur 2024 et portée des résultats}
+\label{chap:test-ml}
+
+Le notebook 07 évalue la configuration retenue sur 2024. Il ne cherche pas un nouveau
+modèle et ne réoptimise ni la représentation des variables, ni $C$, ni le seuil.
+Cette dernière étape vérifie si les résultats de validation se maintiennent sur
+une année ultérieure.
+
+\section{Reconstruire la configuration avant de calculer le test}
+Le fichier exporté par le notebook 06 conserve les variables, les tranches d'âge,
+le traitement des absences, $C$, le seuil, les versions et les empreintes des entrées.
+Le notebook 07 vérifie ces empreintes puis reconstruit le modèle sur 2019-2022.
+L'année 2023 n'est pas ajoutée à l'apprentissage avant le test.
+
+Les scores reconstruits de 2023 sont comparés aux scores enregistrés, avec une
+tolérance absolue de $10^{-4}$. Dans les exports fournis, les écarts sont nuls.
+Ce contrôle est effectué avant le calcul des performances de 2024. Il vérifie que
+le test évalue la configuration annoncée. Aucune nouvelle modalité des champs encodés
+n'est observée en 2024, mais les proportions et relations entre modalités peuvent
+évoluer malgré cette stabilité du vocabulaire.
+
+Le test porte sur \textbf{117\,278 usagers}, dont 21\,024 décès ou hospitalisations,
+soit 17,93\,\%. Toutes les gravités sont connues dans ce périmètre de 2024.
+
+\section{Des performances proches de celles de 2023}
+\input{tableaux/ml_test}
+La log-loss de la logistique est de 0,4001, contre 0,4703 pour la référence.
+La réduction relative est de 14,93\,\%. Le Brier passe de 0,1471 à 0,1268,
+soit une réduction de 13,84\,\%. L'AP atteint 0,4090 et la ROC-AUC 0,7699.
+Les niveaux restent proches de ceux de 2023.
+
+Ce maintien est un résultat favorable pour le protocole testé~: le gain observé
+en validation ne disparaît pas l'année suivante. Il ne garantit pas le comportement
+sur d'autres années, une autre population ou des modalités de collecte différentes.
+Les écarts de score sont descriptifs~; aucun intervalle supposant les usagers
+indépendants n'est utilisé pour revendiquer une significativité.
+
+\section{Pourquoi le seuil 0,5 donne une lecture incomplète}
+Pour illustrer les erreurs, une probabilité au moins égale à 0,5 est transformée
+en prédiction positive. Le seuil est identique à celui fixé avant le test.
+\input{tableaux/ml_confusion}
+
+Le modèle classe 7\,122 usagers comme positifs. Parmi eux, 3\,830 sont effectivement
+décédés ou hospitalisés, soit une précision de 53,78\,\%. Il retrouve cependant
+seulement 18,22\,\% des 21\,024 cas positifs~: 17\,194 ne sont pas classés positifs.
+Les expressions «~alerte~» ou «~cas manqué~» décrivent ici le tableau de classification,
+sans désigner un dispositif de secours.
+
+L'exactitude globale est de 82,53\,\%, contre 82,07\,\% pour la référence qui classe
+tout le monde négatif à ce seuil. L'exactitude seule serait donc peu informative~:
+elle est élevée même lorsqu'aucun cas positif n'est retrouvé.
+
+\figurerapportML[0.88]{07_02_precision_rappel_test.png}{Courbes précision-rappel de validation et de test pour la configuration inchangée.}{fig:pr-test}{07}
+La proximité des courbes résume la stabilité du classement, mais ne fournit pas un
+seuil «~correct~». Un autre compromis demanderait un objectif, des coûts d'erreur et
+une population d'usage définis, ainsi qu'une évaluation appropriée. Aucun réglage
+supplémentaire n'est effectué après lecture de 2024.
+
+\section{La calibration demeure imparfaite}
+\figurerapportML[0.98]{07_01_calibration_test.png}{Calibration descriptive sur 2023 et 2024, avec distribution des probabilités du test.}{fig:calibration-test}{07}
+Les déformations de la courbe de validation se retrouvent dans le test. Dans
+l'intervalle $]0{,}7;0{,}8]$, 1\,030 usagers ont une probabilité moyenne de 74,28\,\%,
+alors que 59,90\,\% sont positifs. Le modèle est donc trop assuré dans cette zone.
+À l'autre extrémité, les probabilités au plus égales à 0,1 ont une moyenne de
+5,22\,\% pour 4,25\,\% observés, sur 42\,619 usagers.
+
+Ces chiffres expliquent pourquoi une ROC-AUC satisfaisante ne suffit pas à interpréter
+une probabilité comme une fréquence fiable. Une recalibration pourrait constituer
+un travail ultérieur, mais elle ne pourrait pas être choisie puis évaluée sur le
+même test 2024 comme si celui-ci était resté indépendant de cette décision.
+
+\section{Examiner les groupes et le rôle des absences}
+\input{tableaux/ml_groupes_test}
+La logistique améliore la log-loss par rapport à la référence dans les trois
+catégories. Le classement reste toutefois moins performant chez les piétons~:
+la ROC-AUC y est de 0,6154, contre 0,7921 chez les conducteurs et 0,6970 chez les
+passagers. Le graphique des moyennes reste proche des proportions observées.
+\figurerapportML[0.88]{07_03_diagnostics_categories_test.png}{Probabilités moyennes et proportions observées par catégorie d'usager en 2024.}{fig:groupes-test}{07}
+
+Les résultats globaux sont majoritairement portés par les conducteurs. Ils ne doivent
+pas masquer la difficulté à classer les piétons entre eux. Les scores par tranche
+d'âge sont également exportés~; ces diagnostics ne servent pas à sélectionner un
+modèle distinct pour chaque groupe.
+
+En 2024, le groupe dont l'âge ou le sexe est absent comprend 2\,424 usagers et un
+seul cas positif. Sa très faible log-loss contribue favorablement au score global.
+Une ROC-AUC calculée sur un seul cas positif ne constitue pas une preuve solide
+de classement dans ce groupe. Le diagnostic de complétude se lit donc avec les
+effectifs, et non avec la seule valeur de l'indicateur.
+
+Sur les 114\,854 usagers dont les deux informations sont présentes, le modèle conserve
+un avantage~: log-loss de 0,4084 contre 0,4761 pour la référence. Les mêmes prédictions
+sont utilisées, sans réentraînement. Cette analyse montre que le gain n'est pas limité
+aux absences d'âge ou de sexe~; elle ne démontre ni la cause de ces absences, ni la
+robustesse à une modification des pratiques de saisie.
+
+\section{Ce que cette expérience permet de conclure}
+L'étude montre qu'un modèle simple, ajusté sur les années antérieures, estime les
+probabilités mieux qu'une fréquence constante sur 2023 et 2024. Elle donne aussi
+des diagnostics concrets~: faibles différences entre plusieurs valeurs de $C$,
+surconfiance dans les intervalles élevés, rappel limité au seuil illustratif et
+performances inégales selon les usagers.
+
+Les limites principales restent celles de la question et des données. BAAC contient
+les accidents corporels enregistrés, avec une cible d'hospitalisation sensible à la
+collecte. Les usagers d'un accident sont dépendants. La représentation en tranches
+et le modèle additif ne capturent pas toutes les relations possibles. Les variables
+disponibles dans le fichier final ne définissent pas un instant de prédiction réel.
+Enfin, une seule année de test ne suffit pas à établir une stabilité générale.
+
+La valeur ajoutée du volet ML est donc une évaluation probabiliste contrôlée et
+une lecture critique des résultats. Une aide à la décision demanderait une autre
+étape de cadrage, des informations disponibles au moment voulu et une validation
+de l'usage. Elle n'est pas démontrée par ces scores.
+
+\FloatBarrier
+\bilan{Le gain par rapport à la référence se maintient en 2024, avec une log-loss
+proche de 0,400 et une ROC-AUC proche de 0,770. La conclusion reste mesurée~:
+le modèle contient un signal prédictif, mais ses probabilités et ses erreurs ne
+justifient pas à elles seules un usage opérationnel.}

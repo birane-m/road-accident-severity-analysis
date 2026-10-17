@@ -1,0 +1,176 @@
+\chapter{Construction d'une table d'analyse fiable}
+\label{chap:preparation}
+
+Le notebook 03 repart des 24 CSV et construit une table métropolitaine par usager.
+L'ordre des opérations est important~: les clés sont harmonisées, le périmètre est
+sélectionné, les champs sont préparés et les lieux sont résumés avant toute jointure
+finale. Les fichiers bruts ne sont pas modifiés.
+
+\section{Lecture et conservation de la provenance}
+Toutes les colonnes sont d'abord lues comme du texte, sans conversion automatique de
+chaînes telles que \code{N/A} en valeurs manquantes. Une convention de lecture identique
+évite de traiter différemment deux années avant même d'avoir défini les règles.
+
+Chaque enregistrement reçoit son rang source et le chemin du CSV dont il provient.
+Ce rang commence à 1 après l'en-tête~; il désigne un enregistrement CSV et pas forcément
+une ligne physique si un champ contient un retour à la ligne. Le manifeste conserve
+la taille, les dimensions et l'empreinte SHA-256 des 24 entrées. Les empreintes sont
+revérifiées avant export pour détecter un changement pendant l'exécution.
+
+L'identifiant \code{id_observation} combine l'année et le rang de l'usager, par exemple
+\code{2024_usager_000011}. Il est créé pour toutes les années, y compris celles disposant
+d'un identifiant officiel. Il reste stable pour une même version et un même ordre du
+fichier source. Les usagers aux attributs identiques conservent des identifiants différents.
+
+\section{Harmonisation et sélection géographique}
+La clé \code{Accident_Id} de 2022 est renommée \code{Num_Acc}. Les espaces, y compris
+internes et insécables, sont retirés des identifiants dans toutes les tables concernées.
+Les clés et les collisions sont contrôlées avant de poursuivre. Le passage d'un code
+de département comme 1 à 01 est explicite~; les codes 2A et 2B restent distincts.
+
+La métropole est sélectionnée par une liste de 96 codes départementaux~: 01 à 95 hors
+ancien code 20, auxquels s'ajoutent 2A et 2B. Le filtre repose sur le département déclaré
+de l'accident, puis conserve les lieux, véhicules et usagers liés à ces accidents.
+Un code inattendu provoquerait un arrêt pour examen, au lieu d'être silencieusement exclu.
+
+Les codes commune sont aussi contrôlés. Un format non interprétable devient manquant
+dans la colonne préparée, avec la valeur brute conservée. Une commune de format valide
+dont le préfixe diffère du département est maintenue avec une alerte. Les quatre
+accidents concernés par ces contrôles représentent six lignes d'usagers après jointure~:
+le comptage d'une anomalie doit donc toujours préciser son unité.
+
+Le tableau~\ref{tab:population-preparee} décrit le passage de 745\,158 usagers des sources
+complètes à 702\,823 usagers métropolitains. Les 42\,335 lignes hors périmètre ne sont
+pas des suppressions motivées par la gravité ou la qualité des variables.
+\input{tableaux/population_preparee}
+
+\section{Règles pour les codes et les mesures}
+Les colonnes catégorielles préparées contiennent un code documenté et interprétable,
+ou une valeur manquante. Les variantes d'écriture telles que \code{1.0} sont ramenées
+à \code{1}, mais le résultat reste du texte. Les lettres présentes dans certaines
+rubriques sont préservées lorsque leur sens est documenté.
+
+\begin{table}[htbp]\centering\small\renewcommand{\arraystretch}{1.2}
+\caption{Exemples de règles appliquées aux valeurs particulières.}\label{tab:codes}
+\begin{tabularx}{\textwidth}{@{}LLL@{}}\toprule
+Situation & Interprétation & Traitement\\\midrule
+\code{trajet = 0} & Non renseigné & Valeur préparée manquante.\\
+\code{secu1 = 0} & Aucun équipement & Modalité conservée.\\
+\code{vosp = 0} & Sans objet & Modalité conservée.\\
+\code{actp = 0} & Non renseigné ou sans objet & Modalité mixte conservée, sans précision inventée.\\
+Code non décrit, par exemple \code{actp = 7} & Sens non établi par la rubrique utilisée & Valeur préparée manquante, code source accessible.\\
+\code{grav = -1} & Gravité inexploitable & Cible manquante, usager conservé.\\\bottomrule
+\end{tabularx}
+\sourcecalcul{règles du notebook 03, fondées sur la documentation et les valeurs observées}
+\end{table}
+
+Les codes \code{-1} sont laissés manquants~; lorsqu'ils ne figurent pas dans la liste
+documentée d'un champ, ils sont aussi signalés comme non documentés dans le bilan.
+Les colonnes brutes ou les CSV d'origine permettent de retrouver l'information initiale.
+Les motifs de nettoyage sont comptés par variable et par table. Ils ne doivent pas être
+additionnés pour produire un nombre de personnes~: une même ligne peut présenter
+plusieurs difficultés et certaines tables décrivent des véhicules ou des lieux.
+
+Le nombre de voies \code{nbv} et la vitesse maximale autorisée \code{vma} sont convertis
+en mesures numériques. Une valeur vide, non numérique ou non positive devient manquante.
+Un nombre de voies non entier est également inexploitable. Les autres valeurs positives
+sont conservées. Les \code{vma} supérieures à 130 sont signalées pour examen, sans
+correction supposée de 500 en 50. L'alerte porte sur 202 usagers associés à un accident
+dont au moins un lieu dépasse ce seuil. Elle ne désigne ni 202 accidents ni une vitesse
+réelle de véhicule~: \code{vma} est une limitation autorisée.
+
+\section{Résumer les lieux sans inventer un lieu individuel}
+Le résumé est construit séparément pour chaque variable au niveau de l'accident.
+S'il reste une seule valeur connue distincte, elle est conservée. S'il existe plusieurs
+valeurs connues, la valeur résumée est manquante et un indicateur signale le désaccord.
+L'information partielle est un second indicateur, activé lorsqu'une valeur connue
+coexiste avec une information inexploitable.
+
+\begin{table}[htbp]\centering\small
+\caption{Règle de résumé illustrée avec une limitation de vitesse.}\label{tab:consensus}
+\begin{tabularx}{\textwidth}{@{}LLLL@{}}\toprule
+Valeurs préparées & Résumé & Désaccord & Partielle\\\midrule
+50, 50 & 50 & Non & Non\\
+50, manquante & 50 & Non & Oui\\
+50, 70 & Manquante & Oui & Non\\
+50, 70, manquante & Manquante & Oui & Oui\\
+Toutes manquantes & Manquante & Non & Non\\\bottomrule
+\end{tabularx}
+\sourcecalcul{convention du notebook 03 ; les indicateurs sont distincts}
+\end{table}
+
+Les champs résumés portent le préfixe \code{lieu_}. La règle est indépendante de l'ordre
+des lignes et ne change pas si une répétition exacte est retirée. Pour l'accident
+\code{202400000005}, la limitation résumée devient manquante avec désaccord, et les quatre
+usagers restent quatre. En métropole, \code{vma} présente un désaccord entre valeurs
+connues pour 1\,675 accidents en 2023 et 1\,875 en 2024. Ces nombres diffèrent des
+variations brutes de l'audit, qui comptaient aussi les oppositions entre connu et inconnu.
+
+Ce résumé est un compromis conservateur, pas une reconstitution du trajet de chaque
+usager. Les lieux sources sont exportés séparément. Le nombre de lignes et les indicateurs
+de désaccord servent d'abord à l'audit~; leur forte évolution entre années devra être
+examinée avant tout usage prédictif.
+
+\section{Âge, dates, coordonnées et cible}
+L'âge approximatif est la différence entre l'année de l'accident et l'année de naissance.
+L'anniversaire étant inconnu, il peut différer d'un an de l'âge exact. Les naissances
+absentes, non interprétables ou non entières restent distinctes des âges hors intervalle.
+La convention retenue conserve un âge préparé de 0 à 110 ans. Au-delà, l'âge devient
+manquant, mais l'usager, l'estimation brute et l'indicateur d'alerte sont conservés.
+Ce seuil est un outil de contrôle, pas une borne biologique démontrée.
+
+Les 191 âges suspects des sources complètes deviennent 172 en métropole, dont 162 en
+2019 et 10 en 2020. Le tableau~\ref{tab:qualite-preparee} présente les âges manquants
+après traitement. Aucun âge n'est remplacé ici par une moyenne.
+\input{tableaux/qualite_preparee}
+
+Les dates sont converties et doivent correspondre à l'année du dossier~; les heures
+doivent être interprétables. Des variables de mois, de jour de semaine et d'heure sont
+créées. Les coordonnées utilisent un séparateur décimal harmonisé et un contrôle des
+limites mondiales. Ces vérifications ne valident pas leur exactitude géographique.
+
+La cible vaut 1 pour \code{grav} dans \{2,3\}, 0 pour \{1,4\}, et reste manquante sinon.
+Les quatre catégories préparées et la gravité source restent accessibles. Les 419 gravités
+inconnues des sources deviennent 365 en métropole~; la différence de 54 provient du
+périmètre géographique. Ces 365 usagers sont conservés dans la table, mais ne devront
+pas participer à un ajustement ou à une évaluation supervisés.
+
+\section{Jointures et contrôles de conservation}
+Les usagers constituent la table de départ. Le véhicule est ajouté sur
+\code{Num_Acc} + \code{id_vehicule}, puis les caractéristiques et le résumé des lieux sur
+\code{Num_Acc}. Chaque table de droite doit être unique sur sa clé. La validation
+\code{many_to_one} interdit une multiplication des observations.
+
+Avant et après chaque jointure, le programme compare l'effectif et l'ensemble des
+\code{id_observation}. Il contrôle aussi les correspondances manquantes et l'accord des
+deux versions de \code{num_veh}. Les 18 jointures annuelles conservent exactement leurs
+usagers, sans correspondance manquante ni contradiction de numéro de véhicule.
+
+Les champs propres aux piétons ne seront pas interprétés comme des comportements
+piétons chez les autres usagers. Les trois équipements \code{secu1}, \code{secu2} et
+\code{secu3} restent séparés~: aucun indicateur unique de protection n'est fabriqué
+sans examiner leur contexte.
+
+\section{Résultat, exports et relecture}
+La table finale comporte \textbf{702\,823 lignes et 119 colonnes}, pour 309\,756 accidents.
+Elle contient 702\,458 cibles connues et 365 inconnues. Aucun usager du périmètre n'a
+été supprimé pour son âge, sa cible inconnue ou une variable explicative manquante.
+Les 119 colonnes comprennent des identifiants, des valeurs sources, de la provenance
+et des indicateurs de qualité~: elles ne forment pas une liste de 119 prédicteurs validés.
+
+Deux CSV compressés sont produits~: la table des usagers et les lieux sources. Des JSON
+décrivent les règles, les types, les rôles des colonnes et les empreintes. Six CSV de
+bilan détaillent les effectifs, la géographie, les identifiants, les jointures, le
+nettoyage et les lieux. L'annexe~\ref{ann:reproduction} en donne l'organisation.
+
+Le CSV ne conserve pas les types Python. Le marqueur réservé
+\code{__BAAC_MANQUANT__} distingue une valeur préparée manquante d'une chaîne vide
+conservée dans un champ brut. Son absence dans les valeurs sources est vérifiée.
+Une relecture par blocs applique le schéma, le marqueur et les conversions de date,
+puis compare les 702\,823 lignes, toutes les colonnes, leurs valeurs et leurs types.
+
+\FloatBarrier
+\bilan{La table est exploitable sans confondre absence d'information et classe négative.
+Les contrôles garantissent la conservation et la traçabilité des observations dans
+les fichiers examinés. Ils ne corrigent pas les biais de collecte ni toutes les erreurs
+de renseignement possibles.}

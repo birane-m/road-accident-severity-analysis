@@ -1,0 +1,46 @@
+\chapter{Repères de lecture des variables}
+\label{ann:variables}
+
+La liste décrit les principaux champs du rapport. Elle ne remplace pas le dictionnaire
+ de l'ONISR ni le schéma des 119 colonnes préparées. Les codes catégoriels restent des
+étiquettes. Seuls les champs retenus au chapitre~\ref{chap:protocole-ml} alimentent le modèle.
+
+{\small\renewcommand{\arraystretch}{1.18}
+\begin{longtable}{@{}p{0.34\textwidth}p{0.61\textwidth}@{}}
+\caption{Variables et indicateurs utiles à la lecture du rapport.}\label{tab:dictionnaire}\\
+\toprule Champ & Signification et précaution\\\midrule
+\endfirsthead
+\toprule Champ & Signification et précaution (suite)\\\midrule
+\endhead
+\midrule\multicolumn{2}{r}{Suite à la page suivante}\\
+\endfoot
+\bottomrule\endlastfoot
+\code{Num_Acc} & Identifiant d'accident, partagé par ses usagers.\\
+\code{id_vehicule} & Identifiant du véhicule ; utilisé avec l'accident pour la jointure.\\
+\code{id_usager} & Identifiant officiel lorsqu'il existe, absent en 2019-2020.\\
+\code{id_observation} & Clé technique année + rang source, sans suivi longitudinal.\\
+\code{grav} & Gravité préparée : indemne, tué, hospitalisé ou léger.\\
+\path{cible_deces_hospitalisation} & Cible 1 pour décès ou hospitalisation, 0 pour indemne ou léger ; inconnue conservée comme absence.\\
+\code{cible_connue} & Indique si la gravité permet de définir la cible binaire.\\
+\code{catu} & Catégorie : conducteur, passager ou piéton.\\
+\code{age_approx} & Année de l'accident moins naissance, contrôlée entre 0 et 110 ans.\\
+\code{tranche_age} & Variable créée pour le modèle ; huit tranches et une modalité d'absence.\\
+\code{sexe} & Sexe enregistré dans BAAC, avec modalité d'absence pour le modèle.\\
+\code{catv} & Catégorie du véhicule associé ; véhicule heurtant pour un piéton.\\
+\code{lum} & Conditions de lumière ; cinq modalités connues.\\
+\code{agg} & Hors agglomération ou en agglomération.\\
+\code{int} & Type d'intersection.\\
+\code{atm} & Conditions atmosphériques enregistrées.\\
+\code{mois_accident} & Mois de la date de l'accident, traité comme catégorie.\\
+\code{jour_semaine} & Jour de semaine dérivé de la date, traité comme catégorie.\\
+\code{heure_accident} & Heure extraite de l'horaire, traitée comme catégorie.\\
+\code{lieu_vma} & Limitation autorisée résumée au niveau de l'accident ; hors modèle ML.\\
+\code{lieu_vma_desaccord} & Plusieurs valeurs connues de limitation pour l'accident.\\
+\code{lieu_vma_partiel} & Valeur connue coexistante avec une valeur inexploitable.\\
+\code{lieu_vma_a_verifier} & Au moins une limitation source préparée supérieure à 130.\\
+\code{age_manquant} & Âge préparé absent, y compris après contrôle.\\
+\code{age_suspect} & Âge brut hors de l'intervalle retenu.\\
+\code{role_temporel} & Apprentissage, validation ou test selon l'année.\\
+\end{longtable}}
+
+\FloatBarrier

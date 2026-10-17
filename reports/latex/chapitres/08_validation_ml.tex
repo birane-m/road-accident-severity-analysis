@@ -1,0 +1,97 @@
+\chapter{Sélection et lecture du modèle sur 2023}
+\label{chap:validation-ml}
+
+Le notebook 06 utilise 2023 pour choisir la régularisation, comparer la logistique à
+la référence et examiner ses comportements. Les résultats présentés ici sont ceux
+exportés dans le projet fourni, avec leurs métadonnées.
+
+\section{Un réglage limité à quatre valeurs de C}
+La grille est fixée à $C\in\{0{,}01;\,0{,}1;\,1;\,10\}$. La règle retient la plus
+petite log-loss de validation et, en cas d'égalité exacte, le plus petit $C$.
+La logistique n'est conservée que si elle fait strictement mieux que la référence.
+\input{tableaux/ml_selection}
+
+La valeur retenue est \textbf{$C=1$}. Les résultats sont néanmoins très proches pour
+$C=0{,}1$, $1$ et $10$. Le protocole départage ces candidats, mais ces écarts ne
+justifient pas de présenter $C=1$ comme une valeur universellement optimale.
+La grille ne devient pas plus fine après consultation du test.
+
+\section{L'apport par rapport à la fréquence constante}
+\input{tableaux/ml_validation}
+La log-loss passe de 0,4709 à 0,4008, soit une réduction relative de 14,88\,\%.
+Le Brier diminue de 13,76\,\%. L'AP atteint 0,4085 et la ROC-AUC 0,7699.
+Le modèle apporte donc une information utile au sens des critères retenus~: les
+caractéristiques distinguent mieux les issues que la seule fréquence historique.
+
+Ce résultat ne signifie ni que 77\,\% des usagers seraient correctement classés,
+ni que l'on disposerait d'un outil opérationnel. La ROC-AUC décrit un classement~;
+la log-loss et le Brier évaluent les probabilités sur cette population.
+Le passage à une décision nécessite encore un seuil et une justification de ses conséquences.
+
+\section{Calibration et compromis précision-rappel}
+La calibration compare des probabilités annoncées à des proportions observées pour
+des groupes de prédictions~\cite{sklearn-calibration}. Le notebook utilise dix
+intervalles fixes, de largeur 0,1. Une courbe proche de la diagonale est compatible
+avec un bon accord dans ces intervalles~; elle ne prouve pas une calibration exacte
+pour chaque profil.
+\figurerapportML[0.98]{06_01_calibration_validation.png}{Calibration descriptive et distribution des probabilités sur 2023.}{fig:calibration-val}{06}
+
+L'accord est imparfait. Les probabilités élevées sont notamment surestimées~: dans
+l'intervalle $]0{,}7;0{,}8]$, la moyenne prédite est de 74,06\,\% contre 60,43\,\%
+observés, pour 988 usagers. Les derniers intervalles reposent sur moins de cas et
+demandent une lecture prudente. Aucune recalibration n'est sélectionnée dans cette version.
+
+\figurerapportML[0.88]{06_02_precision_rappel_validation.png}{Courbe précision-rappel sur 2023 et proportion positive de référence.}{fig:pr-val}{06}
+La précision mesure la part des cas positifs parmi les usagers classés positifs.
+Le rappel mesure la part des cas positifs retrouvés. La courbe montre que couvrir une
+plus grande fraction des décès ou hospitalisations s'accompagne ici d'une précision
+plus faible. Le seuil 0,5 reste un exemple fixé à l'avance~; il n'est pas choisi
+pour maximiser une métrique sur 2023.
+
+\section{Les résultats moyens masquent des différences}
+La proportion positive de 2023 est de 16,79\,\% chez les conducteurs, 16,86\,\%
+chez les passagers et 32,03\,\% chez les piétons. Le modèle retrouve assez bien ces
+niveaux moyens, mais son classement est moins performant au sein du groupe des piétons~:
+la ROC-AUC est de 0,6074, contre 0,7919 chez les conducteurs.
+\figurerapportML[0.88]{06_03_diagnostics_categories_validation.png}{Proportions observées et probabilités moyennes par catégorie d'usager en 2023.}{fig:groupes-val}{06}
+
+Un bon accord sur la moyenne d'un groupe ne suffit donc pas à distinguer correctement
+ses individus. Les effectifs, les cas positifs et les scores par groupe complètent
+nécessairement le graphique des moyennes.
+
+Un autre diagnostic concerne les informations manquantes. En 2023, les 2\,359 usagers
+dont l'âge ou le sexe n'est pas renseigné ne comptent aucun cas positif. Le modèle
+leur attribue de très faibles probabilités. Cette structure peut traduire un mécanisme
+de renseignement plutôt qu'une relation transportable entre absence d'information
+et gravité. Sur les seuls usagers dont ces deux champs sont renseignés, sans
+réentraînement, la log-loss reste meilleure que la référence~: 0,4089 contre 0,4765.
+Le gain ne repose donc pas uniquement sur ce groupe, sans que cette restriction
+corrige les biais de collecte.
+
+\section{Relier les coefficients aux comparaisons statistiques}
+L'encodage conserve toutes les modalités. La comparaison de deux modalités A et R
+d'un même champ se lit par la différence de leurs coefficients~:
+\[
+  \mathrm{OR}_{A/R}=\exp(\widehat\beta_A-\widehat\beta_R).
+\]
+Ce rapport de cotes est conditionnel aux autres caractéristiques du modèle et dépend
+de sa représentation et de la pénalisation. Il ne s'agit pas d'un rapport de proportions.
+\input{tableaux/ml_contrastes}
+
+Pour les piétons, le contraste vaut environ 4,99 en cotes, à caractéristiques du modèle
+maintenues identiques. Il ne signifie pas «~cinq fois la probabilité~» et ne mesure
+pas l'effet causal d'être piéton. Le rapport brut de proportions de la première partie
+répondait à une autre question. La différence entre ces lectures est particulièrement
+visible pour la lumière~: le contraste de nuit sans éclairage devient beaucoup plus
+modéré une fois les autres variables incluses. Cela ne permet pas d'attribuer l'écart
+à une cause précise.
+
+Aucun intervalle ni test de significativité des coefficients n'est fourni. Cette
+lecture reste exploratoire, avec les limites du modèle additif et des profils parfois
+peu représentés dans les données.
+
+\FloatBarrier
+\bilan{La logistique est retenue sur 2023, avec $C=1$. Elle améliore les scores de
+probabilité et de classement, mais les diagnostics mettent déjà en évidence une
+surestimation des fortes probabilités, un classement plus faible chez les piétons et
+un signal lié aux informations absentes. La configuration est figée pour le test.}

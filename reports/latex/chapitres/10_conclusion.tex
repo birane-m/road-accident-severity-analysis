@@ -1,0 +1,53 @@
+\chapter*{Conclusion générale}
+\phantomsection
+\addcontentsline{toc}{chapter}{Conclusion générale}
+
+Ce projet a étudié la gravité des blessures parmi les usagers des accidents corporels
+enregistrés en France métropolitaine entre 2019 et 2024. Il a suivi la chaîne complète
+d'une étude de données~: compréhension des sources, audit, préparation, analyse
+statistique, modélisation et évaluation sur une année ultérieure.
+
+Le premier résultat est une table d'analyse traçable~: 702\,823 observations d'usagers
+pour 309\,756 accidents distincts. Sa construction a demandé de résoudre les différences
+de schéma, les codes spéciaux, les identifiants, les valeurs atypiques et les lieux
+multiples. Les règles retenues préservent les usagers, signalent les désaccords et
+maintiennent les valeurs sources nécessaires à la vérification. Les 365 gravités
+inconnues restent identifiées, puis sont exclues des calculs supervisés.
+
+Les analyses de 2019-2022 répondent à la question des différences observées. Les
+proportions de décès ou d'hospitalisations sont plus élevées chez les piétons que chez
+les conducteurs, chez les personnes de 75 ans ou plus que chez les 35-44 ans, de nuit
+sans éclairage public qu'en plein jour, et hors agglomération qu'en agglomération.
+Le bootstrap par accident rend compte d'une variabilité en respectant le regroupement
+des usagers. La lecture annuelle et la sensibilité aux décès seuls apportent des
+compléments, sans effacer les limites de collecte ni transformer ces associations
+en effets causaux.
+
+La partie prédictive apporte une réponse complémentaire. Avec onze variables et une
+régression logistique régularisée, les probabilités sont mieux estimées que par la
+seule fréquence de l'apprentissage. Le réglage choisi sur 2023 se maintient sur
+2024~: la log-loss diminue d'environ 14,93\,\% par rapport à la référence, avec une
+ROC-AUC proche de 0,770. Le projet établit ainsi un apport mesurable dans le cadre
+de l'évaluation retenue.
+
+Les diagnostics précisent la portée de ce résultat. Au seuil de 0,5, le rappel est
+limité à 18,22\,\%. Les probabilités élevées sont souvent surestimées et le classement
+est moins performant chez les piétons. L'absence d'âge ou de sexe porte également un
+signal de saisie particulier. Le modèle conserve un gain sur les usagers dont ces
+informations sont présentes, mais la stabilité de ce signal en cas de changement
+de collecte n'est pas établie.
+
+La principale contribution du projet tient à la cohérence entre la question,
+l'unité d'analyse, les transformations et l'évaluation. Les résultats restent
+conditionnels à la présence dans BAAC. Ils ne décrivent pas un risque par trajet,
+ne permettent pas une interprétation causale des coefficients et ne démontrent
+pas l'intérêt d'un outil de décision en temps réel. Cette délimitation permet
+de défendre précisément ce qui a été réalisé.
+
+Plusieurs prolongements seraient possibles~: approfondir la calibration, étudier les
+mécanismes d'information manquante, représenter des interactions ou comparer une
+autre famille de modèles. Ils demanderaient un protocole d'évaluation supplémentaire,
+car les scores de 2024 sont désormais connus. Pour mesurer un risque par déplacement
+ou éclairer une décision d'aménagement, des données d'exposition et un objectif
+d'usage seraient également nécessaires.
+

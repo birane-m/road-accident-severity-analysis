@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-17",
+  "perimetre": "France métropolitaine, Corse comprise, BAAC 2019-2024",
+  "unite": "un usager source dans un accident",
+  "chiffres_et_figures": "exports agrégés fournis dans bacc.zip le 17 octobre 2026 ; résultats 04 à 07",
+  "preparation": "bilans, schéma et manifeste fournis, règles 1.1",
+  "revue_execution": "105 cellules Python inchangées dans sept processus neufs ; tous les contrôles internes passent",
+  "jupyter": "installation et version vérifiées ; lancement des noyaux bloqué par les restrictions de sockets de l’environnement de revue",
+  "source_configuration_ml": "resultats/tables/06_modeling/06_configuration_retenue.json",
+  "resultats_revue_distincts_des_resultats_publies": true,
+  "donnees_individuelles_dans_archive_rapport": false,
+  "figures_scientifiques": 18,
+  "chapitres_numerotes": 8
+}

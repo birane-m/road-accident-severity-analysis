@@ -1,0 +1,67 @@
+% Document principal : compiler ce fichier avec pdfLaTeX, trois fois.
+\documentclass[11pt,a4paper]{report}
+\input{preambule}
+
+% Présentation commune des pages préliminaires et des titres non numérotés.
+\newcommand{\titrePreliminaire}[1]{%
+  {\sffamily\color{anthracite}\bfseries\fontsize{24}{29}\selectfont #1\par}%
+  \vspace{5mm}%
+  {\color{terreCuite}\rule{18mm}{1.2pt}\par}%
+  \vspace{8mm}%
+}
+\renewcommand{\contentsname}{Sommaire}
+\setcounter{tocdepth}{1}
+
+\begin{document}
+\renewcommand{\figurename}{Figure}
+\renewcommand{\tablename}{Tableau}
+\input{page_de_garde}
+
+\pagenumbering{roman}
+\pagestyle{plain}
+\color{anthracite}
+\setlength{\parskip}{7pt}
+\setlength{\emergencystretch}{2em}
+\fontsize{11}{15}\selectfont
+
+\pdfbookmark[0]{Résumé}{resume}
+\titrePreliminaire{Résumé}
+\input{chapitres/00_resume}
+\clearpage
+
+\pdfbookmark[0]{Sommaire}{sommaire}
+\renewcommand{\contentsname}{Sommaire}
+{\setlength{\parskip}{0pt}\fontsize{10}{12.5}\selectfont
+\tableofcontents}
+\clearpage
+
+\pagenumbering{arabic}
+\phantomsection
+\titrePreliminaire{Introduction générale}
+\addcontentsline{toc}{chapter}{Introduction générale}
+\fontsize{11}{15}\selectfont
+\input{chapitres/01_introduction}
+\clearpage
+
+\part{Compréhension, préparation et analyse des données BAAC}
+\input{chapitres/02_cadrage}
+\input{chapitres/03_sources_audit}
+\input{chapitres/04_preparation}
+\input{chapitres/05_exploration}
+\input{chapitres/06_statistiques}
+\clearpage
+
+\addtocontents{toc}{\protect\newpage}
+\part{Modélisation probabiliste et évaluation prédictive}
+\input{chapitres/07_protocole_ml}
+\input{chapitres/08_validation_ml}
+\input{chapitres/09_evaluation_ml}
+\input{chapitres/10_conclusion}
+\input{glossaire}
+\input{references}
+\clearpage
+\appendix
+\renewcommand{\nomChapitre}{ANNEXE}
+\input{annexes/01_reproduction}
+\input{annexes/02_dictionnaire}
+\end{document}

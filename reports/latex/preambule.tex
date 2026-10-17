@@ -1,0 +1,92 @@
+% Préambule du rapport : compilation depuis main.tex.
+% Les textes de couverture et les couleurs peuvent être modifiés ci-dessous.
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\IfFileExists{french.ldf}{%
+  \usepackage[french]{babel}
+}{%
+  \usepackage{babel}
+  \babelprovide[main,import]{french}
+}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[a4paper,left=23mm,right=23mm,top=25mm,bottom=21mm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,tabularx,array,longtable}
+\usepackage{ragged2e}
+\usepackage{caption}
+\usepackage{placeins}
+\usepackage{titlesec}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage{hyperref}
+\setlength{\parindent}{0pt}
+
+\definecolor{anthracite}{HTML}{252728}
+\definecolor{terreCuite}{HTML}{A5553E}
+\definecolor{grisTexte}{HTML}{62666A}
+\definecolor{grisCredit}{HTML}{7B7E81}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcommand{\nomChapitre}{CHAPITRE}
+\newcommand{\code}[1]{{\ttfamily\small\detokenize{#1}}}
+\newcommand{\sourcecalcul}[1]{\par\vspace{2pt}{\footnotesize\color{grisTexte}Source : #1.\par}}
+\newcommand{\bilan}[1]{\par\medskip\noindent{\sffamily\bfseries À retenir. }#1\par}
+\newcommand{\figurerapport}[4][0.98]{%
+  \begin{figure}[htbp]\centering
+  \includegraphics[width=#1\textwidth]{figures/#2}
+  \caption{#3}\label{#4}
+  \sourcecalcul{calculs du projet, données BAAC ; notebooks 04 et 05}
+  \end{figure}%
+}
+\captionsetup{font=small,labelfont=bf,skip=7pt,justification=raggedright,singlelinecheck=false}
+\renewcommand{\figurename}{Figure}
+\renewcommand{\tablename}{Tableau}
+\setlength{\textfloatsep}{14pt plus 3pt minus 2pt}
+\setlength{\intextsep}{12pt plus 3pt minus 2pt}
+\setlength{\floatsep}{12pt plus 3pt minus 2pt}
+\renewcommand{\topfraction}{0.90}
+\renewcommand{\bottomfraction}{0.80}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.72}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\titleformat{\chapter}[display]
+  {\sffamily\bfseries\color{anthracite}}
+  {\color{terreCuite}\fontsize{11}{14}\selectfont \nomChapitre\ \thechapter}
+  {8pt}{\fontsize{24}{29}\selectfont}
+  [\vspace{3mm}{\color{terreCuite}\rule{18mm}{1.2pt}}]
+\titlespacing*{\chapter}{0pt}{0pt}{17pt}
+\titleformat{\section}{\sffamily\large\bfseries\color{anthracite}}{\thesection}{0.7em}{}
+\titlespacing*{\section}{0pt}{15pt}{7pt}
+\titleformat{\subsection}{\sffamily\normalsize\bfseries\color{anthracite}}{\thesubsection}{0.7em}{}
+\titlespacing*{\subsection}{0pt}{10pt}{5pt}
+\titleformat{\part}[display]{\centering\sffamily\bfseries\color{anthracite}}
+  {\color{terreCuite}\Large PARTIE \thepart}{18pt}{\fontsize{27}{34}\selectfont}
+
+\newcommand{\titreRapport}{Accidents de la route :\\comprendre leur gravité\\et la prédire}
+\newcommand{\sousTitreRapport}{Analyse de données, étude statistique\\et modélisation prédictive}
+\newcommand{\perimetreRapport}{France métropolitaine\enspace\(\cdot\)\enspace Données BAAC 2019-2024}
+\newcommand{\auteurRapport}{Papa Birane Mbengue}
+\newcommand{\formationRapport}{Élève ingénieur en informatique - Sup Galilée}
+\newcommand{\dateRapport}{Octobre 2026}
+\newcommand{\imageCouverture}{figures/photo_accident_DNA.jpg}
+\newcommand{\creditPhoto}{Source : journal DNA}
+
+\hypersetup{
+  pdftitle={Accidents de la route : comprendre leur gravité et la prédire},
+  pdfauthor={Papa Birane Mbengue},
+  pdfsubject={Données BAAC 2019-2024 - France métropolitaine},
+  hidelinks
+}
+
+
+% Figures du volet prédictif : source précisée par notebook.
+\newcommand{\figurerapportML}[5][0.98]{%
+  \begin{figure}[htbp]\centering
+  \includegraphics[width=#1\textwidth]{figures/#2}
+  \caption{#3}\label{#4}
+  \sourcecalcul{calculs du projet, données BAAC ; notebook #5}
+  \end{figure}%
+}

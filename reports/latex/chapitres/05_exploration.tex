@@ -1,0 +1,147 @@
+\chapter{Analyse exploratoire de la population et de la gravité}
+\label{chap:exploration}
+
+Une fois la table préparée, le notebook 04 décrit les usagers et les différences de
+gravité. Chaque graphique répond à une question et les tableaux conservent les effectifs
+qui permettent d'interpréter les pourcentages. Les résultats de ce chapitre sont
+descriptifs~; leurs intervalles de variabilité seront examinés au chapitre suivant.
+
+\section{Population analysée et dénominateurs}
+Le chargement parcourt le fichier préparé par blocs et conserve uniquement 2019-2022.
+Ces années correspondent à la période d'apprentissage. Les comparaisons de gravité de
+ce chapitre ne portent pas sur 2023 ou 2024, même si ces années ont participé aux audits.
+
+La population comprend 467\,348 usagers et 207\,057 accidents. La gravité est connue
+pour 467\,079 usagers et inconnue pour 269. On compte 83\,081 décès ou hospitalisations,
+soit 17,79\,\% des gravités connues. Ce pourcentage est une proportion par usager~;
+un accident impliquant plusieurs personnes contribue plusieurs observations.
+
+Pour chaque groupe, le dénominateur est le nombre d'usagers de ce groupe dont la cible
+est connue. Par exemple, un cas positif, un cas négatif et une gravité inconnue donnent
+une proportion de $1/2$, et non de $1/3$. Un groupe sans gravité connue ne reçoit pas
+une proportion de zéro~: cette proportion n'est pas définie. Les effectifs de cibles
+inconnues restent présentés dans les sorties du notebook.
+
+\section{Effectifs et profils des usagers}
+\subsection{Les volumes enregistrés varient selon l'année}
+Le tableau~\ref{tab:population-train} sépare les effectifs d'usagers et d'accidents.
+La proportion annuelle se calcule sur les cibles connues de l'année. La proportion
+globale résulte de la somme des numérateurs et dénominateurs~; elle n'est pas la moyenne
+non pondérée des quatre pourcentages annuels.
+\input{tableaux/population_apprentissage}
+\figurerapport{04_01_effectifs_annuels.png}{Évolution des usagers enregistrés et des accidents distincts. Les deux unités utilisent des axes séparés.}{fig:volumes}
+
+La baisse des volumes en 2020 est visible dans les deux unités. Ces courbes ne séparent
+pas les effets de l'exposition routière, des pratiques d'enregistrement et des autres
+changements de contexte. Les seules données représentées ne suffisent pas à attribuer
+la variation à une cause précise ni à en déduire une évolution du risque par trajet.
+\FloatBarrier
+
+\subsection{Âge approximatif et catégorie d'usager}
+Parmi les 461\,530 âges préparés connus, la médiane est de 35 ans, les quartiles de
+23 et 52 ans et la moyenne d'environ 38,5 ans. L'histogramme utilise des classes de
+cinq ans. Il décrit la distribution des personnes enregistrées dont l'âge est connu,
+sans représenter la population générale française.
+\figurerapport[0.90]{04_02_distribution_age.png}{Distribution des âges approximatifs connus. Les 5 818 âges manquants sont comptés séparément.}{fig:ages}
+
+Les conducteurs représentent environ 74,5\,\% des usagers, les passagers 17,7\,\% et
+les piétons 7,8\,\%. Ces parts décrivent la composition des accidents enregistrés.
+Une catégorie plus nombreuse n'est pas nécessairement celle dont la proportion de
+décès ou d'hospitalisations est la plus élevée.
+\figurerapport[0.88]{04_03_categories_usagers.png}{Répartition des catégories d'usagers dans la population analysée.}{fig:catu-pop}
+\FloatBarrier
+
+\section{Répartition des catégories de gravité}
+Les quatre modalités sont conservées pour distinguer ce que le regroupement binaire
+réunit. On observe 196\,270 indemnes, 11\,996 tués, 71\,085 blessés hospitalisés et
+187\,728 blessés légers, auxquels s'ajoutent les 269 gravités inconnues.
+Les pourcentages de la figure~\ref{fig:gravite} portent sur tous les usagers, y compris
+les inconnus~; le taux de la cible binaire porte, lui, sur les seules gravités connues.
+\figurerapport[0.90]{04_04_repartition_gravite.png}{Répartition des quatre modalités originales et des gravités inconnues, 2019-2022.}{fig:gravite}
+
+Les décès seuls représentent 2,57\,\% des gravités connues, contre 17,79\,\% pour décès
+ou hospitalisation. Cette différence de fréquence justifie de lire les deux définitions
+séparément. Une méthode prédictive sera comparée à une référence simple et évaluée
+au-delà de sa seule proportion globale de réponses correctes.
+\FloatBarrier
+
+\section{Comparer les proportions selon les caractéristiques}
+\subsection{Âge}
+La proportion est de 20,40\,\% chez les 0-17 ans, descend à 13,91\,\% chez les 35-44 ans,
+puis atteint 33,26\,\% chez les 75 ans ou plus. Cette forme ne correspond pas à une
+progression linéaire unique de la proportion avec l'âge. Les groupes ont aussi des
+compositions différentes en matière de déplacement et de contexte.
+\figurerapport{04_05_gravite_selon_age.png}{Décès ou hospitalisation selon la tranche d'âge. $n$ désigne les gravités connues ; le trait représente la proportion globale de 17,8\,\%.}{fig:age-gravite}
+\input{tableaux/gravite_age}
+
+La tranche 35-44 ans est retenue comme référence descriptive pour la comparaison
+avec les 75 ans ou plus. Ce choix est intervenu après l'exploration~: il ne s'agit pas
+d'un contraste confirmé à partir d'une hypothèse annoncée avant observation.
+\FloatBarrier
+
+\subsection{Catégorie d'usager}
+Les proportions sont proches pour les conducteurs et les passagers, autour de 16\,\%,
+et plus élevées pour les piétons, à 32,60\,\%. Le tableau~\ref{tab:gravite-categorie}
+montre que cette différence ne s'explique pas par la simple taille des groupes~:
+les piétons sont moins nombreux mais leur proportion positive est plus forte.
+\figurerapport{04_06_gravite_selon_categorie.png}{Proportions selon la catégorie d'usager ; les effectifs indiqués excluent les gravités inconnues.}{fig:catu-gravite}
+\input{tableaux/gravite_categorie}
+
+Cette comparaison n'isole pas un effet causal du statut de piéton. Elle peut refléter
+des différences d'âge, de contexte et de véhicules impliqués. Pour les piétons, le
+véhicule associé est celui qui les a heurtés~; une future analyse par catégorie de
+véhicule devra conserver cette distinction.
+\FloatBarrier
+
+\subsection{Lumière}
+La proportion est de 16,94\,\% en plein jour et de 28,79\,\% de nuit sans éclairage
+public. Les autres modalités ont des niveaux différents~: 20,14\,\% à l'aube ou au
+crépuscule, 19,58\,\% de nuit avec éclairage public éteint et 13,45\,\% avec éclairage
+public allumé. Regrouper toutes les nuits masquerait ces différences.
+\figurerapport{04_07_gravite_selon_lumiere.png}{Proportions selon la lumière. La modalité non renseignée figure dans le tableau, mais pas dans les barres des modalités connues.}{fig:lum-gravite}
+\input{tableaux/gravite_lumiere}
+
+La faible proportion observée lorsque l'éclairage public est allumé ne mesure pas
+l'effet propre d'un éclairage~: les types de routes, l'agglomération et les profils
+d'usagers peuvent différer. La modalité non renseignée ne compte que neuf gravités
+connues~; son pourcentage ne justifie pas une interprétation substantielle.
+\FloatBarrier
+
+\subsection{Agglomération}
+La proportion atteint 25,90\,\% hors agglomération, contre 12,89\,\% en agglomération.
+Les effectifs restent élevés dans les deux groupes. Cette différence décrit le contexte
+des accidents enregistrés~; elle ne fournit ni un risque par kilomètre ni la mesure
+d'un effet isolé de la vitesse, qui n'est pas directement observée par \code{vma}.
+\figurerapport{04_08_gravite_selon_agglomeration.png}{Proportions de décès ou hospitalisations en et hors agglomération, 2019-2022.}{fig:agg-gravite}
+\input{tableaux/gravite_agglomeration}
+\FloatBarrier
+
+\section{Valeurs manquantes et lecture annuelle}
+Les 5\,818 âges manquants comprennent 5\,550 usagers à gravité connue, dont seulement
+10 décès ou hospitalisations, soit 0,18\,\%. Les 268 autres ont une gravité inconnue.
+L'absence d'âge est donc associée à une répartition particulière de la gravité. Ce
+constat invite à examiner le mécanisme de collecte et la stabilité temporelle d'un
+éventuel indicateur d'âge manquant. Il ne permet pas d'affirmer que tous ces usagers
+sont en fuite ni de les supprimer par principe.
+
+Les tableaux annuels du notebook reprennent les comparaisons par catégorie d'usager
+et agglomération. Leur orientation demeure la même chaque année, mais leurs niveaux
+varient. Le chapitre suivant prolonge cette vérification pour les quatre contrastes.
+Une persistance annuelle ne constitue pas un ajustement sur les autres caractéristiques.
+
+\section{Ce que l'exploration permet de retenir}
+L'âge, la catégorie d'usager, la lumière et l'agglomération présentent des écarts
+descriptifs qui méritent d'être quantifiés. Les comparaisons gardent les valeurs
+manquantes visibles et précisent leurs dénominateurs. Elles ne recherchent pas toutes
+les relations possibles entre les 119 colonnes.
+
+Les codes des catégories ne sont pas traités comme des nombres ordonnés. Les résultats
+présentés sont des distributions et des proportions conditionnelles~; aucune matrice
+de corrélations de Pearson sur les codes bruts n'est utilisée comme preuve d'association.
+Des analyses sur d'autres variables ou avec ajustement simultané resteraient des
+travaux supplémentaires, à définir en fonction d'une question précise.
+
+\bilan{L'exploration fournit un portrait de la population et quatre contrastes motivés.
+Elle établit leur sens et leur ampleur descriptive. Elle ne mesure pas encore leur
+variabilité sous un processus de répétition et ne sépare pas les contributions des
+différentes caractéristiques.}

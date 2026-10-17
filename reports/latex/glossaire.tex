@@ -1,0 +1,97 @@
+\chapter*{Glossaire}
+\phantomsection
+\addcontentsline{toc}{chapter}{Glossaire}
+
+Les termes suivants rassemblent les principaux repères utilisés dans le rapport.
+Ils complètent les définitions données au fil des chapitres.
+
+\section*{Données et qualité}
+\textbf{BAAC.} Bulletin d'analyse des accidents corporels de la circulation. Les
+fichiers décrivent les accidents corporels enregistrés, leurs lieux, véhicules et usagers.
+
+\textbf{ONISR.} Observatoire national interministériel de la sécurité routière,
+source de la documentation des bases utilisées.
+
+\textbf{Unité d'observation.} Élément représenté par une ligne de la table étudiée.
+Ici, un usager dans un accident~; une personne n'est pas suivie entre plusieurs accidents.
+
+\textbf{Cardinalité d'une jointure.} Nombre de correspondances possibles entre les
+clés de deux tables. Une relation plusieurs-à-plusieurs peut multiplier les lignes.
+
+\textbf{Valeur manquante.} Information absente ou rendue inexploitable après contrôle.
+Son absence peut être liée à la manière de renseigner les fiches et contenir un signal.
+
+\textbf{Empreinte SHA-256.} Résumé calculé à partir des octets d'un fichier, utilisé
+pour détecter une modification. Une empreinte identique ne prouve pas la validité
+scientifique du contenu.
+
+\textbf{VMA.} Vitesse maximale autorisée. Il s'agit d'une limitation, et non de la
+vitesse effective du véhicule au moment de l'accident.
+
+\section*{Statistique et interprétation}
+\textbf{Probabilité conditionnelle.} Probabilité d'un événement dans une population
+ou une situation donnée. Le projet étudie la gravité parmi les usagers présents dans BAAC.
+
+\textbf{Contraste.} Comparaison explicitement définie entre deux groupes, par exemple
+un écart de proportions ou un rapport de cotes.
+
+\textbf{Bootstrap par accident.} Rééchantillonnage avec remise d'accidents entiers.
+Tous leurs usagers restent regroupés. Ici, le tirage est réalisé séparément par année.
+
+\textbf{Intervalle bootstrap à 95\,\%.} Intervalle construit ici avec les quantiles
+2,5\,\% et 97,5\,\% des réplications. Sa portée dépend du schéma de rééchantillonnage~;
+il ne corrige pas les biais de collecte.
+
+\textbf{Rapport de proportions.} Quotient des proportions positives de deux groupes.
+Il diffère du rapport de cotes, qui compare les quantités $p/(1-p)$.
+
+\begin{samepage}
+\textbf{Association et causalité.} Une association est une relation observée. Un effet
+causal décrit un changement sous une intervention. Le projet ne démontre pas de tels effets.
+\par\end{samepage}
+
+\section*{Modélisation et évaluation}
+\textbf{Cible et classe positive.} Variable à estimer et événement codé 1.
+Ici, la classe positive regroupe les décès et hospitalisations.
+
+\textbf{Apprentissage, validation et test.} Données utilisées respectivement pour
+ajuster les paramètres, choisir les réglages puis évaluer la configuration retenue.
+Dans le projet~: 2019-2022, 2023 et 2024.
+
+\textbf{Encodage indicateur ou one-hot.} Représentation d'une variable catégorielle
+par des colonnes 0/1, une par modalité apprise.
+
+\textbf{Pipeline et fuite d'information.} Une pipeline enchaîne les transformations
+et le modèle. Une fuite survient lorsque l'apprentissage ou la sélection utilisent
+une information qui ne devrait pas être disponible pour l'évaluation visée.
+
+\textbf{Référence constante.} Modèle attribuant la même probabilité à tous les usagers,
+égale ici à la fréquence positive des seules années d'apprentissage.
+
+\textbf{Régression logistique et L2.} Modèle transformant un score additif en
+probabilité binaire. La pénalisation L2 limite l'amplitude des coefficients~;
+un petit paramètre $C$ correspond à une pénalisation plus forte.
+
+\textbf{Rapport de cotes ou odds ratio (OR).} Rapport entre deux cotes $p/(1-p)$.
+Dans le modèle, un contraste de modalités utilise l'exponentielle de leur différence
+de coefficients. Il ne mesure pas automatiquement un effet causal.
+
+\textbf{Log-loss et Brier.} Scores d'erreur des probabilités. La première utilise une
+perte logarithmique ; le second une perte quadratique. Une valeur plus faible est préférable.
+
+\textbf{Calibration.} Accord entre les probabilités annoncées et les fréquences
+observées pour des groupes de prédictions comparables. Elle diffère de la capacité à classer.
+
+\textbf{Précision et rappel.} Part des cas positifs parmi les prédictions positives,
+et part des cas positifs effectivement retrouvés. Ces indicateurs dépendent du seuil.
+
+\textbf{Average precision (AP).} Résumé de la courbe précision-rappel pondéré par les
+gains de rappel. Une valeur plus élevée est préférable ; son niveau dépend de la
+population et de la fréquence des cas positifs.
+
+\textbf{ROC-AUC.} Aire sous la courbe taux de vrais positifs / taux de faux positifs.
+Elle évalue le classement, avec 0,5 pour un score constant lorsque les deux classes
+sont présentes. Elle n'est pas un pourcentage de prédictions correctes.
+
+\textbf{Seuil de classification.} Valeur à partir de laquelle une probabilité devient
+une prédiction positive. Le seuil illustratif du projet est fixé à 0,5.

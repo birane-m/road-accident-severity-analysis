@@ -1,0 +1,218 @@
+[
+  {
+    "année": 2019,
+    "table": "caracteristiques",
+    "fichier": "data/raw/2019/caracteristiques.csv",
+    "octets": 6998722,
+    "sha256": "501e5e520af20555b46d8191874ba0cda78cea9cdf6506eae72857ad21cad4d4",
+    "enregistrements": 58840,
+    "colonnes": 15
+  },
+  {
+    "année": 2019,
+    "table": "lieux",
+    "fichier": "data/raw/2019/lieux.csv",
+    "octets": 5390071,
+    "sha256": "2e39d84e99c2eee776f98ac6a9dbb124f0083252a64329d3f9da1a01954ceab9",
+    "enregistrements": 58840,
+    "colonnes": 18
+  },
+  {
+    "année": 2019,
+    "table": "vehicules",
+    "fichier": "data/raw/2019/vehicules.csv",
+    "octets": 6921630,
+    "sha256": "46d0ea37648f778a9e6874eadda45350089a89d01eecd4cdc12f79ae7f09df57",
+    "enregistrements": 100710,
+    "colonnes": 11
+  },
+  {
+    "année": 2019,
+    "table": "usagers",
+    "fichier": "data/raw/2019/usagers.csv",
+    "octets": 12454879,
+    "sha256": "43e3fa9c6a51d3c964985b2e086df91bc5474b205837c4b64b835083f1349f1a",
+    "enregistrements": 132977,
+    "colonnes": 15
+  },
+  {
+    "année": 2020,
+    "table": "caracteristiques",
+    "fichier": "data/raw/2020/caracteristiques.csv",
+    "octets": 5655584,
+    "sha256": "5162035d7933b3e9e94bf16d9af1bf26e98513f3e09ca4b4514b5893f38a43ee",
+    "enregistrements": 47744,
+    "colonnes": 15
+  },
+  {
+    "année": 2020,
+    "table": "lieux",
+    "fichier": "data/raw/2020/lieux.csv",
+    "octets": 4521088,
+    "sha256": "2e1c8408f80edeacfe61ceba06094c6652bebcd91ca51b917ee79a03b0fd0785",
+    "enregistrements": 47744,
+    "colonnes": 18
+  },
+  {
+    "année": 2020,
+    "table": "vehicules",
+    "fichier": "data/raw/2020/vehicules.csv",
+    "octets": 5492931,
+    "sha256": "bcf5f94ccd6eb56b54f9f23b6ed5658604fd488e721c82f337d664f0d29fc043",
+    "enregistrements": 81066,
+    "colonnes": 11
+  },
+  {
+    "année": 2020,
+    "table": "usagers",
+    "fichier": "data/raw/2020/usagers.csv",
+    "octets": 10054646,
+    "sha256": "083adb9f2658ffca92c8348f9db34234aab777cb6c897c3a2539a64b889bca8e",
+    "enregistrements": 105295,
+    "colonnes": 15
+  },
+  {
+    "année": 2021,
+    "table": "caracteristiques",
+    "fichier": "data/raw/2021/caracteristiques.csv",
+    "octets": 7045926,
+    "sha256": "2af1ce3b896ccce9645836eba43a01b4430edaaa984cd1d5a5f099dc8df95b40",
+    "enregistrements": 56518,
+    "colonnes": 15
+  },
+  {
+    "année": 2021,
+    "table": "lieux",
+    "fichier": "data/raw/2021/lieux.csv",
+    "octets": 5771984,
+    "sha256": "b0afe542e300e5fce28275302a3aca7b9f7c0d97fee3de59d346148c7885fd05",
+    "enregistrements": 56518,
+    "colonnes": 18
+  },
+  {
+    "année": 2021,
+    "table": "vehicules",
+    "fichier": "data/raw/2021/vehicules.csv",
+    "octets": 6202316,
+    "sha256": "fc688b1b2e6e2e526475ca897f9e800d54fed07733425b7181d280915c9372e9",
+    "enregistrements": 97315,
+    "colonnes": 11
+  },
+  {
+    "année": 2021,
+    "table": "usagers",
+    "fichier": "data/raw/2021/usagers.csv",
+    "octets": 13028412,
+    "sha256": "b5f2d7c269cdfda657a1516c90680a237e3a5f62d200c698c6d1e0415490563a",
+    "enregistrements": 129248,
+    "colonnes": 16
+  },
+  {
+    "année": 2022,
+    "table": "caracteristiques",
+    "fichier": "data/raw/2022/caracteristiques.csv",
+    "octets": 6884406,
+    "sha256": "0b6e3b67192729b117697fd598a271b859fd5a48898bf10987eb047a0fb7ee1e",
+    "enregistrements": 55302,
+    "colonnes": 15
+  },
+  {
+    "année": 2022,
+    "table": "lieux",
+    "fichier": "data/raw/2022/lieux.csv",
+    "octets": 5617313,
+    "sha256": "8f7a37d8c4dcad78a7aeb03569f57103f057900df4185d019fcc2e2e477fef76",
+    "enregistrements": 55302,
+    "colonnes": 18
+  },
+  {
+    "année": 2022,
+    "table": "vehicules",
+    "fichier": "data/raw/2022/vehicules.csv",
+    "octets": 6021965,
+    "sha256": "ee2fe2a6e8b07d7095967f88eb11069382b48b07e3e1271dc655007e3cb9f61b",
+    "enregistrements": 94493,
+    "colonnes": 11
+  },
+  {
+    "année": 2022,
+    "table": "usagers",
+    "fichier": "data/raw/2022/usagers.csv",
+    "octets": 13013255,
+    "sha256": "f3c5fd2875c275807a624a3569d4e779abaeea29787975a1f3379399447be112",
+    "enregistrements": 126662,
+    "colonnes": 16
+  },
+  {
+    "année": 2023,
+    "table": "caracteristiques",
+    "fichier": "data/raw/2023/caracteristiques.csv",
+    "octets": 6591826,
+    "sha256": "e6cb8685b7e144e56365bed7c542bd90a95c3512431b9ba0e62a01cfd4a87ac0",
+    "enregistrements": 54822,
+    "colonnes": 15
+  },
+  {
+    "année": 2023,
+    "table": "lieux",
+    "fichier": "data/raw/2023/lieux.csv",
+    "octets": 7176266,
+    "sha256": "80dda3688cc0b49b160a241982c87d8afdc2ebb2fc8306fffd2e4483d2315909",
+    "enregistrements": 70860,
+    "colonnes": 18
+  },
+  {
+    "année": 2023,
+    "table": "vehicules",
+    "fichier": "data/raw/2023/vehicules.csv",
+    "octets": 6431828,
+    "sha256": "24be234ca2e0625f9596a8aa6c8b14d168d862687af9c6ef4dd3618f3d9ddf0a",
+    "enregistrements": 93585,
+    "colonnes": 11
+  },
+  {
+    "année": 2023,
+    "table": "usagers",
+    "fichier": "data/raw/2023/usagers.csv",
+    "octets": 13938227,
+    "sha256": "d309a59f0baff86cf3f082db9711e61690d23ea82ec8ebafcad7ab4c5e6b59b9",
+    "enregistrements": 125789,
+    "colonnes": 16
+  },
+  {
+    "année": 2024,
+    "table": "caracteristiques",
+    "fichier": "data/raw/2024/caracteristiques.csv",
+    "octets": 6538156,
+    "sha256": "45a69360aeb566f9065e079c5e9840fb1068e71cd4e6fcc34cb9fdcaff04b391",
+    "enregistrements": 54402,
+    "colonnes": 15
+  },
+  {
+    "année": 2024,
+    "table": "lieux",
+    "fichier": "data/raw/2024/lieux.csv",
+    "octets": 7070795,
+    "sha256": "a500a44b4efdb18f80de31c2ebde48c682b050667b7b1348671caeec736c8f09",
+    "enregistrements": 70248,
+    "colonnes": 18
+  },
+  {
+    "année": 2024,
+    "table": "vehicules",
+    "fichier": "data/raw/2024/vehicules.csv",
+    "octets": 6369908,
+    "sha256": "40261a1d5ac034aa6e8193a97a2f89cae31ef3492b7f3b264122d6e868daff8d",
+    "enregistrements": 92678,
+    "colonnes": 11
+  },
+  {
+    "année": 2024,
+    "table": "usagers",
+    "fichier": "data/raw/2024/usagers.csv",
+    "octets": 13843733,
+    "sha256": "4e05cea88d5aa04a16092335310d4a5591e11802a94aaeeff75c6697dfaab5a0",
+    "enregistrements": 125187,
+    "colonnes": 16
+  }
+]

@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+\centering\small
+\renewcommand{\arraystretch}{1.18}
+\caption{Écarts et rapports : décès ou hospitalisation, 2019-2022.}\label{tab:deces_hospitalisation}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrr@{}}
+\toprule
+Comparaison A / R & Écart (points) & IC à 95\% & Rapport & IC à 95\% \\
+\midrule
+75+ / 35-44 ans & 19,35 & [18,69 ; 20,04] & 2,39 & [2,33 ; 2,46] \\
+Piétons / conducteurs & 16,03 & [15,52 ; 16,54] & 1,97 & [1,93 ; 2,00] \\
+Nuit sans éclairage / jour & 11,85 & [11,35 ; 12,38] & 1,70 & [1,67 ; 1,73] \\
+Hors / en agglomération & 13,02 & [12,76 ; 13,28] & 2,01 & [1,98 ; 2,04] \\
+\bottomrule
+\end{tabular*}
+\sourcecalcul{notebook 05 ; intervalles percentiles marginaux, 2 000 réplications d'accidents stratifiées par année}
+\end{table}
