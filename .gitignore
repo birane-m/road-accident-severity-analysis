@@ -17,3 +17,20 @@ __pycache__/
 
 # OS
 .DS_Store
+
+# Règles ajoutées lors de la réorganisation BAAC
+venv/
+.pytest_cache/
+/data/raw/
+/data/processed/*.csv.gz
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*~
+
+# Archives locales du projet
+/*.zip
