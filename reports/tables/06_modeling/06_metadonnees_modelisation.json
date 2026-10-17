@@ -1,0 +1,40 @@
+{
+  "notebook": "06_logistic_regression.ipynb",
+  "environnement": {
+    "python": "3.12.3",
+    "pandas": "3.0.6",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "scikit_learn": "1.9.1",
+    "matplotlib": "3.11.2"
+  },
+  "sha256_donnees": "f7f4661ad2cb49ad50b40e843a294b9da82bbea8d5f67e4630e07ca8b325a720",
+  "sha256_schema": "22a2862543e4e2926a808826197b3af94b5c35dc5b3df37907502efb1cfd4478",
+  "sha256_module": "8f758007438a2d3198790f836ff789a30b730cdb856dddb66b4a3b9702268363",
+  "annees_utilisees": [
+    2019,
+    2020,
+    2021,
+    2022,
+    2023
+  ],
+  "tables": [
+    "06_population_modelisation.csv",
+    "06_valeurs_manquantes.csv",
+    "06_selection_regularisation.csv",
+    "06_comparaison_validation.csv",
+    "06_modalites_nouvelles_validation.csv",
+    "06_calibration_validation.csv",
+    "06_erreurs_seuil_050.csv",
+    "06_diagnostics_sous_populations.csv",
+    "06_contrastes_logistique.csv"
+  ],
+  "figures": [
+    "06_01_calibration_validation.png",
+    "06_02_precision_rappel_validation.png",
+    "06_03_diagnostics_categories_validation.png"
+  ],
+  "protocole": "06_protocole_modelisation.json",
+  "configuration": "06_configuration_retenue.json",
+  "dependance_intra_accident": "aucun intervalle indépendant par usager ; scores descriptifs sur 2023"
+}

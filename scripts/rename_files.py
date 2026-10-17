@@ -4,16 +4,17 @@ RAW_DIR = Path("data/raw")
 
 EXPECTED_NAMES = {
     "caracteristiques": "caracteristiques.csv",
+    "carcteristiques": "caracteristiques.csv",
     "caract": "caracteristiques.csv",
-    "lieux": "lieux.csv",
-    "usagers": "usagers.csv",
     "vehicules": "vehicules.csv",
+    "usagers": "usagers.csv",
+    "lieux": "lieux.csv",
 }
 
 
 def detect_type(filename: str) -> str | None:
     """
-    Détermine le type de fichier BAAC à partir de son nom.
+    Detect the BAAC file type from its filename.
     """
     name = filename.lower()
 
@@ -53,7 +54,6 @@ def rename_files():
                 continue
 
             file_path.rename(new_path)
-
             print(f"{file_path.name} -> {new_name}")
 
 

@@ -1,0 +1,102 @@
+{
+  "version": "1.0",
+  "date_ecriture_utc": "2026-10-17T12:42:39.873333+00:00",
+  "cible": "cible_deces_hospitalisation",
+  "unite": "un usager à gravité connue",
+  "perimetre": "France métropolitaine, Corse comprise, 2019-2024",
+  "apprentissage": [
+    2019,
+    2020,
+    2021,
+    2022
+  ],
+  "validation": 2023,
+  "test_reserve": 2024,
+  "variables_sources": [
+    "age_approx",
+    "sexe",
+    "catu",
+    "catv",
+    "lum",
+    "agg",
+    "int",
+    "atm",
+    "mois_accident",
+    "jour_semaine",
+    "heure_accident"
+  ],
+  "variables_modele": [
+    "tranche_age",
+    "sexe",
+    "catu",
+    "catv",
+    "lum",
+    "agg",
+    "int",
+    "atm",
+    "mois_accident",
+    "jour_semaine",
+    "heure_accident"
+  ],
+  "bornes_age": [
+    0,
+    18,
+    25,
+    35,
+    45,
+    55,
+    65,
+    75,
+    111
+  ],
+  "tranches_age": [
+    "0-17 ans",
+    "18-24 ans",
+    "25-34 ans",
+    "35-44 ans",
+    "45-54 ans",
+    "55-64 ans",
+    "65-74 ans",
+    "75 ans ou plus"
+  ],
+  "valeur_absente": "Non renseigné",
+  "encodage": "one-hot appris sur 2019-2022, toutes modalités, inconnues ignorées et comptées",
+  "regression": {
+    "penalisation": "L2",
+    "solver": "lbfgs",
+    "tol": 1e-06,
+    "max_iter": 1500,
+    "class_weight": null,
+    "random_state": 20261017
+  },
+  "grille_C": [
+    0.01,
+    0.1,
+    1.0,
+    10.0
+  ],
+  "selection": "log-loss 2023 minimale, puis plus petit C en cas d'égalité exacte",
+  "comparaison_reference": "logistique retenue seulement si log-loss strictement inférieure",
+  "reference": "fréquence de cible 1 dans les seules données d'apprentissage",
+  "seuil_illustratif": 0.5,
+  "seuil_optimise": false,
+  "sensibilite": "mêmes prédictions sur les usagers de 2023 dont âge et sexe sont renseignés, sans réentraînement",
+  "scores": [
+    "log_loss",
+    "brier",
+    "average_precision",
+    "roc_auc"
+  ],
+  "refit_2019_2023_avant_test": false,
+  "sha256_donnees": "f7f4661ad2cb49ad50b40e843a294b9da82bbea8d5f67e4630e07ca8b325a720",
+  "sha256_schema": "22a2862543e4e2926a808826197b3af94b5c35dc5b3df37907502efb1cfd4478",
+  "sha256_module": "8f758007438a2d3198790f836ff789a30b730cdb856dddb66b4a3b9702268363",
+  "environnement": {
+    "python": "3.12.3",
+    "pandas": "3.0.6",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "scikit_learn": "1.9.1",
+    "matplotlib": "3.11.2"
+  }
+}
