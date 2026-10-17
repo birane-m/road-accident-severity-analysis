@@ -86,11 +86,14 @@ et [le guide des résultats](reports/README.md).
 
 ## Installation
 
-Prérequis : **Python 3.12**, GNU Make et un accès au dépôt de paquets Python.
-Les commandes ci-dessous sont prévues pour Linux ou macOS et se lancent depuis
-la racine du projet.
+Prérequis : **Git, Python 3.12 et GNU Make**, avec un accès à GitHub et au dépôt
+de paquets Python. Les commandes ci-dessous sont prévues pour Linux ou macOS.
+
+Cloner le dépôt, entrer dans le dossier du projet, puis installer l'environnement :
 
 ```bash
+git clone https://github.com/birane-m/road-accident-severity-analysis.git
+cd road-accident-severity-analysis
 make install
 ```
 
@@ -149,6 +152,11 @@ Pour chaque année de 2019 à 2024, placer les quatre fichiers suivants dans
 ```bash
 .venv/bin/python scripts/rename_files.py
 ```
+
+Le clonage ne récupère pas les données brutes ni les grandes tables préparées,
+car ces fichiers sont exclus du dépôt. Les 24 CSV sources doivent être téléchargés
+et placés dans les dossiers indiqués avant l'exécution des notebooks.
+Le notebook 03 reconstruit ensuite les données préparées.
 
 Le Makefile installe l'environnement. Le téléchargement des données et
 l'exécution des notebooks restent des étapes distinctes.
