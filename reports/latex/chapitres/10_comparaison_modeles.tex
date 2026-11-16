@@ -1,0 +1,246 @@
+\chapter[Autre famille de modèles, seuils et informations absentes]{Autre famille de modèles,\\seuils et informations absentes}
+\label{chap:comparaison}
+
+Le chapitre~\ref{chap:test-ml} se termine sur trois réserves explicites~: le modèle additif
+ne capture pas toutes les relations possibles, le rappel au seuil illustratif reste faible
+et l'absence d'information porte un signal particulier. Le notebook 08 reprend ces trois
+points. Il compare une seconde famille de modèles, rend l'arbitrage des seuils explicite
+et documente le groupe des usagers sans âge.
+
+\section{Ce que ce chapitre peut et ne peut pas établir}
+Les scores de 2024 de la régression logistique ont été consultés au chapitre précédent.
+Cette année n'est donc plus un jeu resté inconnu pour la comparaison menée ici. Deux
+garde-fous sont appliqués et doivent être rappelés avec les résultats~:
+
+\begin{itemize}\setlength{\itemsep}{1pt}
+\item les réglages du modèle d'arbres sont choisis \textbf{sur 2023 seule}, avec une
+grille écrite sur disque avant le premier entraînement~;
+\item aucun score de 2024 n'intervient dans ce choix, et aucun réentraînement n'a lieu
+après lecture du test.
+\end{itemize}
+
+La stabilité observée entre 2023 et 2024 rend le résultat crédible. Elle ne remplace pas
+une année réellement vierge, qui serait nécessaire pour trancher définitivement entre les
+deux familles. Le protocole des chapitres~\ref{chap:protocole-ml} à~\ref{chap:test-ml}
+n'est pas modifié rétrospectivement~: ce chapitre ajoute une comparaison, il ne révise
+aucun critère antérieur.
+
+\section{Reconstruire avant de comparer}
+Comme le notebook 07, le notebook 08 vérifie l'empreinte SHA-256 de la table préparée,
+puis réentraîne la régression logistique retenue et compare ses scores de 2023 à ceux
+enregistrés par le notebook 06. L'écart maximal observé reste inférieur à la tolérance
+de $10^{-4}$. Sans ce contrôle, un écart entre deux modèles pourrait provenir d'un
+changement d'entrée plutôt que de la méthode comparée.
+
+\section{Un protocole d'arbres fixé avant les scores}
+Le modèle comparé est un ensemble d'arbres de décision construits séquentiellement par
+gradient boosting~\cite{sklearn-hgb}. Chaque arbre corrige les erreurs des précédents,
+et la somme de leurs contributions est transformée en probabilité. Contrairement à la
+régression logistique, cette construction peut représenter une combinaison de
+caractéristiques dont l'effet diffère de la somme de leurs effets séparés.
+
+Les onze variables, les tranches d'âge et le découpage temporel sont identiques à ceux
+du chapitre~\ref{chap:protocole-ml}. Deux éléments seulement changent, et chacun est
+justifié~:
+
+\textbf{La représentation des modalités.} L'implémentation traite nativement les
+variables catégorielles, sans encodage indicateur. Les modalités sont apprises sur
+2019-2022 et déclarées comme telles~; une modalité jamais vue devient une valeur
+manquante, gérée comme telle et comptée. Aucune modalité nouvelle n'apparaît en 2023
+ni en 2024.
+
+\textbf{L'arrêt anticipé est désactivé.} Son fonctionnement habituel consiste à mettre
+de côté une fraction aléatoire de l'apprentissage pour décider quand cesser d'ajouter
+des arbres. Ce découpage séparerait les usagers d'un même accident, alors que tout le
+projet les maintient groupés. Le nombre d'itérations est donc placé dans la grille et
+choisi sur 2023, comme les autres réglages.
+
+La grille comporte trois réglages à deux valeurs chacun~: le pas d'apprentissage
+(0,05 ou 0,1), le nombre maximal de feuilles par arbre (15 ou 31) et le nombre
+d'itérations (200 ou 400). Les autres paramètres sont fixés~: au moins 50 usagers par
+feuille, aucune pénalisation L2 supplémentaire et une graine identique à celle du
+notebook 06. La règle de sélection reprend celle du chapitre~\ref{chap:validation-ml}~:
+log-loss minimale sur 2023, égalité départagée par le modèle le plus simple, et modèle
+conservé seulement s'il fait strictement mieux.
+
+\section{Sélection sur 2023}
+\input{tableaux/ml_selection_arbres}
+
+La configuration retenue utilise un pas de 0,05, 31 feuilles et 400 itérations.
+Les huit candidats tiennent toutefois dans un intervalle de log-loss d'environ 0,002,
+entre 0,3846 et 0,3866.
+Comme pour les quatre valeurs de $C$ au chapitre~\ref{chap:validation-ml}, le réglage
+n'est pas déterminant~: c'est le choix de la famille de modèles qui produit l'écart,
+non son accordage. Présenter cette sélection comme une optimisation décisive serait
+trompeur.
+
+\section{Résultats sur 2024}
+\input{tableaux/ml_comparaison_modeles}
+
+Le modèle d'arbres améliore les quatre indicateurs, sur 2023 comme sur 2024. Sur le test,
+la log-loss passe de 0,4001 à 0,3845 et le score de Brier de 0,1268 à 0,1213. Rapportée
+à la référence constante, la réduction de log-loss passe ainsi de 14,93\,\% pour la
+logistique à 18,24\,\% pour les arbres.
+
+Deux lectures méritent d'être séparées. D'une part, le gain en log-loss reste modeste~:
+environ 3,9\,\% par rapport à la logistique. D'autre part, l'\textit{average precision}
+progresse beaucoup plus nettement, de 0,4089 à 0,4629, soit 13,2\,\%. Ce second
+indicateur se concentre sur le haut du classement. L'écart entre les deux progressions
+indique que l'amélioration ne se répartit pas uniformément~: elle porte surtout sur
+l'identification des usagers les plus exposés.
+
+La stabilité temporelle se vérifie pour les deux modèles. La ROC-AUC de la logistique
+vaut 0,7699 en 2023 et 0,7699 en 2024~; celle des arbres 0,7900 et 0,7890. Ce qui est
+appris sur 2019-2022 conserve le même niveau de performance deux ans plus tard. Une
+seule année supplémentaire ne suffit cependant pas à établir une stabilité générale.
+
+\section{Pourquoi les arbres font mieux}
+L'écart de score ne dit pas d'où il vient. Deux diagnostics le précisent.
+
+\subsection{La logistique plafonne dans le haut du risque}
+\figurerapportML[0.88]{08_01_calibration_comparaison_test.png}{Calibration des deux modèles sur 2024, dix intervalles fixes. Les intervalles de moins de 50 usagers sont écartés.}{fig:calibration-comparaison}{08}
+
+En dessous de 0,45, les deux courbes suivent la diagonale. Au-delà, la régression
+logistique s'en écarte~: le chapitre~\ref{chap:test-ml} relevait déjà qu'elle annonce
+74,28\,\% dans l'intervalle $]0{,}7;0{,}8]$ pour 59,90\,\% observés. Elle n'attribue
+par ailleurs presque jamais de probabilité supérieure à 0,85. Les arbres restent proches
+de la diagonale sur toute l'étendue et atteignent des valeurs plus élevées.
+
+Autrement dit, le modèle additif estime correctement le risque moyen mais \textbf{ne sait
+pas désigner les cas les plus graves}~: il surestime les probabilités élevées tout en
+étant incapable d'en produire de très élevées. C'est précisément ce que mesure
+l'\textit{average precision}, et cela explique pourquoi elle progresse davantage que
+la log-loss.
+
+\subsection{Les combinaisons de caractéristiques}
+\input{tableaux/ml_profils_croises}
+
+Sur les profils croisant catégorie d'usager et tranche d'âge, restreints aux groupes
+d'au moins 300 usagers, l'écart absolu moyen entre probabilité moyenne estimée et
+proportion observée vaut 1,52 point pour la régression logistique et 0,55 point pour
+les arbres.
+
+Le cas des \textbf{conducteurs de moins de 18 ans} est le plus parlant~: pour la plupart
+des conducteurs de deux-roues motorisés, compte tenu de l'âge légal de conduite. La
+proportion observée y atteint 31,94\,\% en 2024, alors que la régression logistique
+annonce 25,53\,\%. Sur l'échelle des log-cotes, elle additionne un effet de tranche
+d'âge modéré et un effet de catégorie neutre~; elle ne dispose d'aucun terme pour
+exprimer que la combinaison des deux dépasse la somme de ses parties. Les arbres
+retrouvent 31,34\,\%.
+
+Ce diagnostic décrit un défaut de représentation, pas un effet causal de l'âge ou du
+statut de conducteur. Il indique où le modèle additif se trompe, sans établir pourquoi
+ces usagers sont plus exposés.
+
+\section{Rendre l'arbitrage des seuils explicite}
+Le seuil de 0,5 des chapitres précédents est illustratif. Il conduit à un rappel de
+18,22\,\% pour la logistique et de 21,16\,\% pour les arbres. Ces valeurs ne disent rien
+du coût d'un rappel plus élevé, et les lire comme une limite du modèle serait une erreur.
+
+Fixer le seuil directement sur 2024 reviendrait à régler une quantité sur l'année de
+test. Chaque seuil est donc déterminé sur 2023, pour y atteindre un rappel visé, puis
+appliqué sans retouche à 2024.
+\input{tableaux/ml_seuils}
+\figurerapportML[0.86]{08_02_precision_rappel_comparaison_test.png}{Courbes précision-rappel sur 2024. Les points marquent les seuils fixés sur 2023.}{fig:pr-comparaison}{08}
+
+Deux enseignements se dégagent.
+
+\textbf{Les seuils se transportent.} Un seuil réglé sur 2023 pour un rappel de 50\,\%
+donne un rappel de 49,7\,\% à 50,2\,\% sur 2024 selon le modèle. La stabilité temporelle
+ne concerne donc pas seulement les scores agrégés~: elle vaut aussi pour une règle de
+décision concrète. Ce constat porte sur deux années consécutives et sur cette population.
+
+\textbf{L'arbitrage devient lisible.} Avec le modèle d'arbres, retrouver la moitié des
+cas graves de 2024 suppose de signaler 20,7\,\% des usagers, avec 43,1\,\% d'alertes
+justes, soit environ 1,3 fausse alerte par cas détecté. Les arbres dominent la
+régression logistique à chaque niveau de rappel.
+
+Ces chiffres décrivent un tableau de classification. Ils ne désignent pas un dispositif
+de secours et ne définissent pas un seuil «~correct~». Le choix d'un seuil demanderait
+un objectif, des coûts d'erreur et une population d'usage, qui ne sont pas établis ici.
+
+\section{Les usagers sans âge : une pratique d'enregistrement datée}
+Le chapitre~\ref{chap:exploration} signalait que les usagers sans âge à gravité connue
+de 2019-2022 ne comptent que 10 décès ou hospitalisations sur 5\,550. Ce constat se
+précise maintenant sur les six années.
+\input{tableaux/ages_manquants_annuel}
+\figurerapportML[0.98]{08_03_ages_manquants.png}{Fréquence de l'absence d'âge et gravité associée, par année.}{fig:ages-manquants}{08}
+
+\subsection{Une rupture en 2021}
+En 2019 et 2020, les seuls âges manquants sont les 162 et 10 valeurs que le notebook 03
+a lui-même rendues manquantes parce qu'elles sortaient de l'intervalle 0-110 ans.
+À partir de 2021, environ 2\,\% des usagers arrivent sans âge dans la source, soit
+entre 2\,350 et 2\,860 personnes par an, et \textbf{aucun ne provient de notre
+nettoyage}. La rupture tient donc à la collecte, pas à la préparation.
+
+Cette date correspond à un changement documenté. L'audit du chapitre~\ref{chap:audit}
+relevait, d'après la documentation ONISR, l'ajout d'usagers en fuite à partir de 2021,
+avec des informations parfois manquantes~\cite{doc-onisr}. Le profil de ce groupe est
+cohérent avec cette explication~: sur les 10\,319 usagers sans âge à gravité connue de
+2019 à 2024, \textbf{99,5\,\% sont des conducteurs}, \textbf{93,8\,\% n'ont pas non plus
+de sexe renseigné} et \textbf{99,4\,\% sont enregistrés comme indemnes}.
+
+La concordance entre la date, le profil et la documentation rend cette interprétation
+plausible. Elle ne la démontre pas~: les CSV ne comportent aucun champ désignant la
+fuite, et rien ne permet d'attribuer individuellement chaque absence à cette cause.
+Ces usagers ne sont donc pas supprimés.
+
+\subsection{Ce que ce groupe apporte aux scores}
+Le taux de décès ou d'hospitalisation y est de 0\,\% à 0,04\,\% selon l'année, contre
+environ 18\,\% ailleurs. Les deux modèles l'apprennent et attribuent à ce groupe une
+probabilité moyenne de l'ordre de 0,002 à 0,003 en 2024, pour 0,04\,\% observés.
+\input{tableaux/ages_manquants_impact}
+
+Retirer ces 2\,419 usagers de l'évaluation de 2024 dégrade tous les scores~: la ROC-AUC
+de la régression logistique passe de 0,7699 à 0,7641, celle des arbres de 0,7890 à
+0,7836. Environ \textbf{0,6 point de ROC-AUC provient donc d'une pratique
+d'enregistrement}, et non d'une information sur le risque routier.
+
+Un détail complète la lecture. L'\textit{average precision} ne bouge pratiquement pas~:
+0,4089 contre 0,4090 pour la logistique, 0,4629 contre 0,4630 pour les arbres. Ces
+usagers reçoivent des probabilités très basses et sont effectivement négatifs~; ils se
+rangent en bas du classement sans peser sur la courbe précision-rappel. Les indicateurs
+qui dépendent de toute la distribution sont donc flattés par ce groupe, alors que celui
+qui se concentre sur le haut du classement ne l'est pas. Comparer deux modèles sur la
+seule ROC-AUC exposerait à cette confusion.
+
+Ce chapitre raisonne sur l'absence du seul âge, soit 2\,419 usagers en 2024. Le
+chapitre~\ref{chap:test-ml} examinait l'absence de l'âge \emph{ou} du sexe, soit
+2\,424 usagers~: les deux définitions se recouvrent largement sans coïncider.
+
+\subsection{S'agit-il d'une fuite de cible~?}
+Non, au sens strict~: l'information est disponible au même moment que les autres
+variables et n'est pas dérivée de la gravité. Le modèle exploite une régularité
+réelle et reproductible, présente aussi bien en 2023 qu'en 2024.
+
+C'est en revanche un indicateur du \emph{processus d'enregistrement} plutôt que du
+risque. Sa stabilité dépend de pratiques administratives, non d'un mécanisme routier~:
+une évolution de la saisie suffirait à le faire disparaître. Les conclusions du projet
+tiennent sans lui, comme le montrent les scores restreints, mais une part des
+performances annoncées lui est imputable et doit être déclarée.
+
+\section{Ce que ce chapitre permet de conclure}
+Le modèle additif n'épuise pas l'information contenue dans ces onze variables. Un modèle
+capable de représenter des combinaisons améliore les quatre scores, principalement sur
+l'identification des cas les plus exposés. La régression logistique conserve en revanche
+un avantage de lisibilité~: ses contrastes du chapitre~\ref{chap:validation-ml}
+s'interprètent directement, ce que les arbres ne permettent pas sous cette forme.
+
+Le rappel limité au seuil de 0,5 reflétait le seuil choisi, non une incapacité du modèle.
+Rendre l'arbitrage explicite montre qu'un rappel de 50\,\% est atteignable au prix de
+signaler un usager sur cinq, avec une règle qui se transporte d'une année à l'autre.
+
+Enfin, une partie mesurable des performances provient d'un artefact de collecte daté et
+décrit. Le signaler ne diminue pas le résultat~: cela en fixe la portée.
+
+Aucun de ces éléments ne modifie les limites générales de l'étude. Les associations ne
+sont pas causales, la population reste conditionnelle à la présence dans BAAC, les
+variables ne définissent pas un instant de prédiction réel et aucune utilité
+opérationnelle n'est démontrée.
+
+\FloatBarrier
+\bilan{Les arbres boostés améliorent les quatre scores à variables et protocole
+identiques~; le gain porte surtout sur le haut du classement, là où le modèle additif
+plafonne. L'arbitrage précision-rappel est rendu explicite et les seuils fixés sur 2023
+se transportent à 2024. Environ 0,6 point de ROC-AUC provient d'une pratique
+d'enregistrement apparue en 2021, désormais datée, décrite et chiffrée.}

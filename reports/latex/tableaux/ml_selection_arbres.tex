@@ -1,0 +1,20 @@
+\begin{table}[htbp]
+\centering\small
+\renewcommand{\arraystretch}{1.18}
+\caption{Les huit configurations d'arbres évaluées sur 2023 ; ligne retenue en gras.}\label{tab:ml-selection-arbres}
+\begin{tabularx}{\textwidth}{@{}rrrrrrr@{}}
+\toprule
+Pas & Feuilles & Itérations & Log-loss & Brier & AP & ROC-AUC \\
+\midrule
+0,05 & 15 & 200 & 0,386638 & 0,122034 & 0,456584 & 0,787240 \\
+0,05 & 15 & 400 & 0,385326 & 0,121621 & 0,460178 & 0,788943 \\
+0,05 & 31 & 200 & 0,384799 & 0,121441 & 0,461567 & 0,789662 \\
+\textbf{0,05} & \textbf{31} & \textbf{400} & \textbf{0,384591} & \textbf{0,121401} & \textbf{0,462051} & \textbf{0,789973} \\
+0,10 & 15 & 200 & 0,385420 & 0,121657 & 0,459306 & 0,788906 \\
+0,10 & 15 & 400 & 0,385012 & 0,121545 & 0,460528 & 0,789571 \\
+0,10 & 31 & 200 & 0,384906 & 0,121518 & 0,460611 & 0,789676 \\
+0,10 & 31 & 400 & 0,385496 & 0,121744 & 0,458971 & 0,789144 \\
+\bottomrule
+\end{tabularx}
+\sourcecalcul{notebook 08 ; grille écrite avant le premier entraînement, sélection par log-loss de 2023}
+\end{table}

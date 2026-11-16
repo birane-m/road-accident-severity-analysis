@@ -4,11 +4,11 @@ Le rapport comprend une couverture, un résumé, un sommaire automatique, une
 introduction générale et deux grandes parties :
 
 1. Compréhension, préparation et analyse des données BAAC, en cinq chapitres.
-2. Modélisation probabiliste et évaluation prédictive, en trois chapitres.
+2. Modélisation probabiliste et évaluation prédictive, en quatre chapitres.
 
 Il se termine par une conclusion générale, un glossaire, les références et deux
-annexes. Il intègre 18 graphiques des notebooks 04 à 07, un schéma relationnel
-dessiné en LaTeX et 17 tableaux générés depuis les résultats agrégés.
+annexes. Il intègre 21 graphiques des notebooks 04 à 08, un schéma relationnel
+dessiné en LaTeX et 23 tableaux générés depuis les résultats agrégés.
 
 ## Organisation
 
@@ -17,13 +17,13 @@ dessiné en LaTeX et 17 tableaux générés depuis les résultats agrégés.
 - `page_de_garde.tex` : mise en page de la couverture.
 - `chapitres/00_resume.tex` et `01_introduction.tex` : résumé et introduction.
 - `chapitres/02_cadrage.tex` à `06_statistiques.tex` : première partie.
-- `chapitres/07_protocole_ml.tex` à `09_evaluation_ml.tex` : seconde partie.
-- `chapitres/10_conclusion.tex` : conclusion générale.
+- `chapitres/07_protocole_ml.tex` à `10_comparaison_modeles.tex` : seconde partie.
+- `chapitres/11_conclusion.tex` : conclusion générale.
 - `glossaire.tex` : définitions des principaux termes.
 - `references.tex` : sources documentaires et méthodologiques.
 - `annexes/` : reproduction et repères de variables.
 - `tableaux/` : tableaux LaTeX générés, déjà disponibles pour compiler.
-- `scripts/generer_tableaux.py` : génération des 17 tableaux avec la bibliothèque standard Python.
+- `scripts/generer_tableaux.py` : génération des 23 tableaux avec la bibliothèque standard Python.
 - `resultats/` : résultats agrégés, configurations et provenance des chiffres.
 - `figures/` : graphiques et photographie de couverture créditée au journal DNA.
 - `documents/description_baac_2005_2024.pdf` : documentation ONISR.
@@ -54,11 +54,12 @@ en conservant leurs sous-dossiers. Le PDF final peut être rangé dans `reports/
 
 ## Chiffres et reproduction
 
-Les chiffres et graphiques sont ceux des résultats fournis et vérifiés le
-17 octobre 2026. Les scores ML publiés proviennent des exports du projet sous
+Les chiffres et graphiques des chapitres 1 à 8 sont ceux des résultats fournis et
+vérifiés le 17 octobre 2026 ; ceux du chapitre 9 proviennent du notebook 08, ajouté
+le 16 novembre 2026. Les scores ML publiés proviennent des exports du projet sous
 Python 3.12.3. La revue d'exécution sous Python 3.12.14 et les faibles variations
 numériques sont documentées dans `resultats/environnement_revue.json` et l'annexe A.
 
 Le script de tableaux ne réexécute pas les analyses. Les données individuelles
 volumineuses ne sont pas incluses dans cette archive de rédaction. Pour reconstruire
-l'étude complète, utiliser les sept notebooks du projet et les 24 CSV sources.
+l'étude complète, utiliser les huit notebooks du projet et les 24 CSV sources.

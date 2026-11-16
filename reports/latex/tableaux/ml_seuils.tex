@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering\small
+\renewcommand{\arraystretch}{1.18}
+\caption{Seuils fixés sur 2023 pour un rappel visé, puis appliqués sans retouche à 2024.}\label{tab:ml-seuils}
+\begin{tabularx}{\textwidth}{@{}Lrrrrrrr@{}}
+\toprule
+Modèle & Visé (\%) & Seuil & Rappel (\%) & Précision (\%) & Fausses alertes & Cas manqués & Alertés (\%) \\
+\midrule
+Logistique & 20 & 0,477 & 20,14 & 52,98 & 3\,757 & 16\,790 & 6,81 \\
+Logistique & 30 & 0,377 & 30,12 & 47,48 & 7\,004 & 14\,691 & 11,37 \\
+Logistique & 40 & 0,307 & 40,25 & 43,21 & 11\,123 & 12\,561 & 16,70 \\
+Logistique & 50 & 0,258 & 50,16 & 39,90 & 15\,883 & 10\,479 & 22,53 \\
+Logistique & 60 & 0,214 & 60,47 & 36,72 & 21\,910 & 8\,310 & 29,52 \\
+Logistique & 70 & 0,175 & 70,06 & 32,93 & 30\,002 & 6\,295 & 38,14 \\
+Arbres & 20 & 0,514 & 19,85 & 62,78 & 2\,475 & 16\,850 & 5,67 \\
+Arbres & 30 & 0,415 & 29,92 & 55,00 & 5\,147 & 14\,733 & 9,75 \\
+Arbres & 40 & 0,348 & 39,94 & 48,23 & 9\,015 & 12\,626 & 14,85 \\
+Arbres & 50 & 0,298 & 49,71 & 43,12 & 13\,786 & 10\,574 & 20,67 \\
+Arbres & 60 & 0,244 & 60,06 & 38,93 & 19\,803 & 8\,398 & 27,65 \\
+Arbres & 70 & 0,198 & 69,64 & 35,03 & 27\,150 & 6\,383 & 35,63 \\
+\bottomrule
+\end{tabularx}
+\sourcecalcul{notebook 08 ; « Logistique » et « Arbres » désignent les deux modèles du tableau~\ref{tab:ml-comparaison} ; toutes les colonnes de résultat portent sur 2024}
+\end{table}

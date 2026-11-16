@@ -1,8 +1,8 @@
 Ce projet étudie la gravité des blessures des usagers impliqués dans les accidents
 corporels de la route enregistrés en France métropolitaine, Corse comprise. Il poursuit
 deux objectifs complémentaires~: décrire les différences de gravité observées selon les
-caractéristiques des usagers et le contexte de l'accident, puis évaluer la capacité d'une
-régression logistique à estimer cette gravité sur une année ultérieure.
+caractéristiques des usagers et le contexte de l'accident, puis évaluer la capacité de
+modèles simples à estimer cette gravité sur une année ultérieure.
 
 L'étude s'appuie sur les données du Bulletin d'analyse des accidents corporels de la
 circulation, ou BAAC, pour les années 2019 à 2024. Les quatre fichiers annuels décrivent
@@ -40,11 +40,21 @@ relative de 14,93\,\%. La ROC-AUC atteint 0,770. Le gain se maintient donc sur l
 suivante, mais le rappel au seuil illustratif de 0,5 reste limité à 18,22\,\%.
 
 Les probabilités élevées sont surestimées et le classement est moins performant chez
-les piétons. Le signal porté par les informations manquantes impose aussi une lecture
-prudente. Cette étude rétrospective met en évidence un apport prédictif mesurable,
-sans démontrer une utilité opérationnelle ni un effet causal. Les données, les règles,
-les résultats et leurs limites sont documentés dans les notebooks et le rapport.
+les piétons.
+
+Un dernier chapitre reprend ces réserves. Un modèle d'arbres boostés, évalué avec les
+mêmes variables et le même protocole, abaisse la log-loss de 2024 à 0,3845 et porte la
+ROC-AUC à 0,789~; le gain se concentre sur les usagers les plus exposés, que le modèle
+additif ne sait pas désigner. L'arbitrage précision-rappel est rendu explicite~: un
+rappel de 50\,\% suppose de signaler environ un usager sur cinq, et les seuils fixés
+sur 2023 se transportent à 2024. Le signal porté par l'absence d'âge est enfin daté de
+2021, rapproché d'un changement de collecte documenté et chiffré à environ 0,6 point
+de ROC-AUC.
+
+Cette étude rétrospective met en évidence un apport prédictif mesurable, sans démontrer
+une utilité opérationnelle ni un effet causal. Les données, les règles, les résultats
+et leurs limites sont documentés dans les notebooks et le rapport.
 
 \vspace{3mm}
 {\sffamily\small\raggedright\textbf{Mots-clés~:} BAAC, accidents corporels, gravité des blessures,
-analyse de données, bootstrap, apprentissage automatique.\par}
+analyse de données, bootstrap, régression logistique, arbres boostés, calibration.\par}

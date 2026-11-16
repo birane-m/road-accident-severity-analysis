@@ -17,12 +17,14 @@ Notebook & Entrées & Sorties principales\\\midrule
 04 & Table usagers et schéma du 03 & Dix tableaux, huit figures et métadonnées.\\
 05 & Table usagers et schéma du 03 & Sept tableaux de bilan, réplications, quatre figures et métadonnées.\\
 06 & Table usagers, schéma, bilan du 03 et module ML & Comparaison sur 2023, configuration, diagnostics et trois figures.\\
-07 & Entrées du 06 et configuration retenue & Vérification de reconstruction, test 2024, diagnostics et trois figures.\\\bottomrule
+07 & Entrées du 06 et configuration retenue & Vérification de reconstruction, test 2024, diagnostics et trois figures.\\
+08 & Entrées du 06 et configuration retenue & Comparaison d'un modèle d'arbres, table des seuils, analyse des âges absents et trois figures.\\\bottomrule
 \end{tabularx}
 \end{table}
 
 Chaque notebook recharge ses entrées depuis un espace de variables neuf. Les notebooks
-06 et 07 utilisent le module \code{src/baac_ml.py} ; l'encodeur reste appris dans la pipeline.
+06 à 08 utilisent le module \code{src/baac_ml.py} ; les traitements appris, encodeur
+compris, restent ajustés sur l'apprentissage seul.
 
 \section{Installer et lancer l'étude}
 Avec Python 3.12 et GNU Make disponibles sous Linux ou macOS, depuis la racine du projet~:
@@ -32,7 +34,7 @@ make install
 \end{verbatim}
 Le fichier \code{requirements.txt} fixe les versions des bibliothèques directement
 utilisées. Leurs dépendances sont installées par \code{pip} selon les contraintes
- déclarées. Le noyau Jupyter choisi doit utiliser ce venv. Les sept notebooks sont
+ déclarées. Le noyau Jupyter choisi doit utiliser ce venv. Les huit notebooks sont
  ensuite exécutés dans l'ordre, chacun depuis un noyau neuf.
 
 La commande \code{make clean} supprime uniquement \code{.venv}, après \code{deactivate}
@@ -48,27 +50,35 @@ Le manifeste \path{baac_sources_manifest.json} contient les empreintes des sourc
 Les six bilans documentent effectifs, géographie, identifiants, jointures, lieux et nettoyage.
 
 Les figures et tableaux sont classés par étape dans les sous-dossiers
-\code{04_exploration}, \code{05_statistics}, \code{06_modeling} et \code{07_evaluation},
-sous \code{reports/figures} et \code{reports/tables}. Une ligne du fichier
+\code{04_exploration}, \code{05_statistics}, \code{06_modeling}, \code{07_evaluation}
+et \code{08_comparaison}, sous \code{reports/figures} et \code{reports/tables}. Une ligne du fichier
 \path{05_replicats_contrastes.csv.gz} représente un résultat de rééchantillonnage,
 et non un usager~: ses 16\,000 lignes correspondent à 2\,000 réplications, quatre
 contrastes et deux événements.
 
-Le notebook 07 lit \path{06_configuration_retenue.json}.
-La copie \path{07_configuration_evaluee.json} assure la traçabilité du test.
+Les notebooks 07 et 08 lisent \path{06_configuration_retenue.json}.
+La copie \path{07_configuration_evaluee.json} assure la traçabilité du test, et
+\path{08_protocole_arbres.json} conserve la grille du modèle d'arbres, écrite avant
+le premier entraînement.
 Les JSON conservent les règles et empreintes ; les CSV donnent les populations,
 scores et diagnostics.
 
 \section{Contrôles de reproduction réalisés}
-La revue finale du 17 octobre 2026 a installé les dépendances du projet dans un venv
+La revue du 17 octobre 2026 a installé les dépendances du projet dans un venv
 neuf. La commande \code{pip check} n'a détecté aucun conflit. Les 105 cellules Python
- des sept notebooks ont ensuite été exécutées, sans modification, dans sept processus
+ des notebooks 01 à 07 ont ensuite été exécutées, sans modification, dans sept processus
 neufs, en repartant des 24 CSV sans table préparée ni résultat préexistant.
 
 Les contrôles internes passent, les deux tables compressées reconstruites sont
 identiques octet par octet à celles fournies et les résultats statistiques sont
-reproduits. Les 18 figures sont régénérées. La logistique retient à nouveau $C=1$~;
-les écarts des scores de validation et de test restent inférieurs à $10^{-4}$.
+reproduits. Les 18 figures des notebooks 04 à 07 sont régénérées. La logistique retient
+à nouveau $C=1$~; les écarts des scores de validation et de test restent inférieurs
+à $10^{-4}$.
+
+Le notebook 08, ajouté le 16 novembre 2026, applique le même contrôle~: il vérifie
+l'empreinte de la table préparée et reconstruit les scores de validation du notebook 06
+avant toute comparaison. Il produit trois figures et huit fichiers de résultats
+supplémentaires.
 
 Les chiffres publiés proviennent des exports sous Python 3.12.3. La revue utilise
 Python 3.12.14 et les mêmes versions directes des bibliothèques. Son environnement est
@@ -77,8 +87,8 @@ par les restrictions de sockets : les cellules sont exécutées directement en P
 sans prétendre valider l'interface Jupyter sur la machine de l'auteur.
 
 \section{Modifier et compiler le rapport}
-Les sources du rapport contiennent les 18 figures scientifiques, le schéma relationnel
- dessiné en LaTeX, les résultats agrégés nécessaires et un script qui génère 17 tableaux
+Les sources du rapport contiennent les 21 figures scientifiques, le schéma relationnel
+ dessiné en LaTeX, les résultats agrégés nécessaires et un script qui génère 23 tableaux
 LaTeX. Le script utilise uniquement la bibliothèque standard Python. Il ne réexécute
 ni le nettoyage, ni le bootstrap, ni les modèles.
 

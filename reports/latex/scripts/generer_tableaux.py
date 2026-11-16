@@ -157,9 +157,103 @@ table('ml_groupes_test.tex',"Diagnostics du test selon la catégorie d'usager.",
         number(100*float(r['probabilite_moyenne'])),number(r['roc_auc'],4)] for r in diagnostics],
       'Lrrrrr','notebook 07 ; les deux pourcentages sont une proportion observée et une probabilité moyenne')
 
+
+# Troisieme partie : resultats du notebook 08, comparaison de modeles.
+ml08 = 'resultats/tables/08_comparaison/'
+
+comparaison = read(ml08 + '08_comparaison_modeles.csv')
+rows = []
+for row in comparaison:
+    values = [row['annee'], esc(row['modele'])] + [number(row[k], 4) for k in scores]
+    if row['modele'] == 'Arbres boostés':
+        values = [r'\textbf{' + v + '}' for v in values]
+    rows.append(values)
+table('ml_comparaison_modeles.tex',
+      'Référence, régression logistique et arbres boostés sur 2023 et 2024.',
+      'tab:ml-comparaison', ['Année', 'Modèle', 'Log-loss', 'Brier', 'AP', 'ROC-AUC'],
+      rows, 'lLrrrr',
+      "notebook 08 ; même apprentissage 2019-2022 et même représentation pour les deux modèles")
+
+grille = read(ml08 + '08_selection_arbres.csv')
+protocole08 = json.loads((ROOT / ml08 / '08_protocole_arbres.json').read_text())
+configuration08 = json.loads((ROOT / ml08 / '08_configuration_arbres.json').read_text()) \
+    if (ROOT / ml08 / '08_configuration_arbres.json').exists() else None
+meilleur = min(grille, key=lambda r: float(r['log_loss']))
+rows = []
+for row in sorted(grille, key=lambda r: (float(r['learning_rate']), int(float(r['max_leaf_nodes'])), int(float(r['max_iter'])))):
+    values = [number(row['learning_rate'], 2), integer(row['max_leaf_nodes']), integer(row['max_iter'])] \
+             + [number(row[k], 6) for k in ['log_loss', 'brier', 'average_precision', 'roc_auc']]
+    if row is meilleur or (row['learning_rate'], row['max_leaf_nodes'], row['max_iter']) == \
+            (meilleur['learning_rate'], meilleur['max_leaf_nodes'], meilleur['max_iter']):
+        values = [r'\textbf{' + v + '}' for v in values]
+    rows.append(values)
+table('ml_selection_arbres.tex',
+      'Les huit configurations d\'arbres évaluées sur 2023 ; ligne retenue en gras.',
+      'tab:ml-selection-arbres',
+      ['Pas', 'Feuilles', 'Itérations', 'Log-loss', 'Brier', 'AP', 'ROC-AUC'],
+      rows, 'rrrrrrr',
+      'notebook 08 ; grille écrite avant le premier entraînement, sélection par log-loss de 2023')
+
+seuils = [r for r in read(ml08 + '08_seuils_rappel_cible.csv') if r['rappel_vise_sur_2023']]
+rows = []
+for row in seuils:
+    court = {'Régression logistique': 'Logistique', 'Arbres boostés': 'Arbres'}
+    rows.append([esc(court.get(row['modele'], row['modele'])), number(100 * float(row['rappel_vise_sur_2023']), 0),
+                 number(row['seuil'], 3), number(100 * float(row['rappel'])),
+                 number(100 * float(row['precision'])), integer(row['fausses_alertes']),
+                 integer(row['cas_manques']), number(row['part_population_alertee_pct'])])
+table('ml_seuils.tex',
+      'Seuils fixés sur 2023 pour un rappel visé, puis appliqués sans retouche à 2024.',
+      'tab:ml-seuils',
+      ['Modèle', 'Visé (\\%)', 'Seuil', 'Rappel (\\%)', 'Précision (\\%)',
+       'Fausses alertes', 'Cas manqués', 'Alertés (\\%)'],
+      rows, 'Lrrrrrrr',
+      "notebook 08 ; « Logistique » et « Arbres » désignent les deux modèles du tableau~\\ref{tab:ml-comparaison} ; toutes les colonnes de résultat portent sur 2024")
+
+profils = read(ml08 + '08_profils_croises_test.csv')
+profils = sorted(profils, key=lambda r: -float(r['observe_pct']))[:8]
+table('ml_profils_croises.tex',
+      "Profils les plus exposés en 2024 : proportions observées et probabilités moyennes.",
+      'tab:ml-profils',
+      ['Catégorie', 'Tranche d\'âge', 'Usagers', 'Observé (\\%)', 'Logistique (\\%)', 'Arbres (\\%)'],
+      [[esc(r['categorie']), esc(r['tranche_age']), integer(r['usagers']),
+        number(r['observe_pct']), number(r['logistique_pct']), number(r['arbres_pct'])]
+       for r in profils],
+      'LLrrrr',
+      "notebook 08 ; groupes d'au moins 300 usagers, triés par proportion observée")
+
+ages = read(ml08 + '08_ages_manquants_par_annee.csv')
+rows = []
+for r in ages:
+    taux = number(r['taux_si_age_absent_pct']) if r['taux_si_age_absent_pct'] else '--'
+    rows.append([r['annee'], integer(r['usagers']), integer(r['age_absent']),
+                 number(r['part_age_absent_pct']), integer(r['dont_age_juge_invraisemblable']),
+                 integer(r['positifs_si_age_absent']), taux,
+                 number(r['taux_si_age_present_pct'])])
+table('ages_manquants_annuel.tex',
+      "Usagers sans âge et gravité associée, par année, sur les gravités connues.",
+      'tab:ages-manquants',
+      ['Année', 'Usagers', 'Sans âge', 'Part (\\%)', 'Dont nettoyage', 'Positifs',
+       'Taux sans âge (\\%)', 'Taux avec âge (\\%)'],
+      rows, 'lrrrrrrr',
+      "notebook 08 ; la colonne « dont nettoyage » compte les âges rendus manquants par le notebook 03")
+
+impact = read(ml08 + '08_ages_manquants_impact_scores.csv')
+table('ages_manquants_impact.tex',
+      "Scores de 2024 avec et sans les usagers dont l'âge est absent.",
+      'tab:ages-impact',
+      ['Modèle', 'Population', 'Usagers', 'Log-loss', 'Brier', 'AP', 'ROC-AUC'],
+      [[esc(r['modele']), esc(r['population']), integer(r['usagers'])]
+       + [number(r[k], 4) if r.get(k) else '--' for k in scores] for r in impact],
+      'LLrrrrr',
+      "notebook 08 ; mêmes prédictions dans les deux populations, sans réentraînement")
+
+assert abs(float(meilleur['log_loss']) - 0.3846) < 1e-3
+assert len(grille) == 8
+assert sum(int(r['age_absent']) for r in ages) == 10319
 assert configuration['C_retenu_logistique']==1.0
 assert configuration['usagers_apprentissage']==467079
 assert configuration['usagers_validation']==118101
 assert configuration['colonnes_apres_encodage']==117
 assert all(abs(float(r['score_06'])-float(r['score_reconstruit'])) <= 1e-4 for r in read(ml07+'07_controle_reconstruction.csv'))
-print('17 tableaux générés depuis les résultats agrégés, contrôles numériques validés.')
+print('23 tableaux générés depuis les résultats agrégés, contrôles numériques validés.')

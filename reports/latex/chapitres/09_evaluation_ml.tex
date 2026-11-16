@@ -53,7 +53,8 @@ elle est élevée même lorsqu'aucun cas positif n'est retrouvé.
 \figurerapportML[0.88]{07_02_precision_rappel_test.png}{Courbes précision-rappel de validation et de test pour la configuration inchangée.}{fig:pr-test}{07}
 La proximité des courbes résume la stabilité du classement, mais ne fournit pas un
 seuil «~correct~». Un autre compromis demanderait un objectif, des coûts d'erreur et
-une population d'usage définis, ainsi qu'une évaluation appropriée. Aucun réglage
+une population d'usage définis, ainsi qu'une évaluation appropriée. Le
+chapitre~\ref{chap:comparaison} explicite cet arbitrage en fixant les seuils sur 2023. Aucun réglage
 supplémentaire n'est effectué après lecture de 2024.
 
 \section{La calibration demeure imparfaite}
@@ -83,7 +84,8 @@ d'âge sont également exportés~; ces diagnostics ne servent pas à sélectionn
 modèle distinct pour chaque groupe.
 
 En 2024, le groupe dont l'âge ou le sexe est absent comprend 2\,424 usagers et un
-seul cas positif. Sa très faible log-loss contribue favorablement au score global.
+seul cas positif. Le chapitre~\ref{chap:comparaison} date ce phénomène et en mesure
+l'effet sur les scores. Sa très faible log-loss contribue favorablement au score global.
 Une ROC-AUC calculée sur un seul cas positif ne constitue pas une preuve solide
 de classement dans ce groupe. Le diagnostic de complétude se lit donc avec les
 effectifs, et non avec la seule valeur de l'indicateur.
@@ -104,7 +106,8 @@ performances inégales selon les usagers.
 Les limites principales restent celles de la question et des données. BAAC contient
 les accidents corporels enregistrés, avec une cible d'hospitalisation sensible à la
 collecte. Les usagers d'un accident sont dépendants. La représentation en tranches
-et le modèle additif ne capturent pas toutes les relations possibles. Les variables
+et le modèle additif ne capturent pas toutes les relations possibles~; le
+chapitre~\ref{chap:comparaison} mesure ce que coûte cette restriction. Les variables
 disponibles dans le fichier final ne définissent pas un instant de prédiction réel.
 Enfin, une seule année de test ne suffit pas à établir une stabilité générale.
 
