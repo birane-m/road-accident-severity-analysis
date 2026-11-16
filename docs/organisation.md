@@ -22,22 +22,27 @@ avec pandas, sans décompression manuelle.
 | 05 - Statistique | `reports/figures/05_statistics/` | `reports/tables/05_statistics/` |
 | 06 - Modélisation et validation | `reports/figures/06_modeling/` | `reports/tables/06_modeling/` |
 | 07 - Test final | `reports/figures/07_evaluation/` | `reports/tables/07_evaluation/` |
+| 08 - Comparaison | `reports/figures/08_comparaison/` | `reports/tables/08_comparaison/` |
 
 Les préfixes des fichiers indiquent le notebook qui les produit. Chaque notebook
 écrit ses exports dans les sous-dossiers de son étape.
 
-Le notebook 07 lit la configuration retenue par le notebook 06 dans
-`reports/tables/06_modeling/06_configuration_retenue.json`, puis écrit ses propres
-résultats dans les dossiers de l'étape 07. Il vérifie la provenance des entrées
-et reconstruit les scores de validation avant de calculer ceux du test 2024.
+Les notebooks 07 et 08 lisent la configuration retenue par le notebook 06 dans
+`reports/tables/06_modeling/06_configuration_retenue.json`, puis écrivent leurs propres
+résultats dans les dossiers de leur étape. Ils vérifient la provenance des entrées
+et reconstruisent les scores de validation avant de calculer ceux du test 2024.
+
+Le notebook 08 enregistre en plus son propre protocole dans
+`reports/tables/08_comparaison/08_protocole_arbres.json`, écrit avant le premier
+entraînement du modèle d'arbres.
 
 ## Code et documentation
 
 Les notebooks contiennent les explications, le code, les contrôles et les
 conclusions de chaque étape. Le module `src/baac_ml.py` regroupe les fonctions
 et les règles de représentation des variables utilisées dans les notebooks 06
-et 07. Ce partage permet d'appliquer les mêmes transformations à la validation
-et au test.
+à 08. Ce partage permet d'appliquer les mêmes transformations à la validation,
+au test et à la comparaison de modèles.
 
 Le dossier `scripts/` contient les utilitaires, dont `rename_files.py` pour
 harmoniser les noms des fichiers téléchargés si nécessaire.
